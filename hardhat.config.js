@@ -1,9 +1,7 @@
-require("dotenv").config();
-
-require("@nomiclabs/hardhat-etherscan");
 require("@nomiclabs/hardhat-waffle");
-require("hardhat-gas-reporter");
-require("solidity-coverage");
+require("hardhat-deploy");
+require("@openzeppelin/hardhat-upgrades");
+const { mnemonic, moralisApiKey } = require("./secrets.json");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -23,18 +21,15 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   solidity: "0.8.4",
-  networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+  namedAccounts: {
+    deployer: {
+      default: 0,
     },
   },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+  networks: {
+    rinkeby: {
+      url: "https://YOUR_MORALIS_NODE_URL/eth/rinkeby",
+      accounts: { mnemonic, mnemonic },
+    },
   },
 };
