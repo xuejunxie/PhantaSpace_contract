@@ -22,10 +22,20 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "base64-sol/base64.sol";
 
+import "hardhat/console.sol";
+
+
 contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable, ERC721Burnable {
     uint public precision;
-    constructor(uint _precision) ERC721("PhantaSpace", unicode"🌐") {
+    string public baseURL;
+    constructor(uint _precision, string memory _baseURL) ERC721("PhantaSpace", unicode"🌐") {
         precision = _precision;
+        baseURL = _baseURL;
+       
+    }
+
+    function setBaseURL (string memory _baseURL) public {
+        baseURL = _baseURL;
     }
 
     function pause() public onlyOwner {
@@ -64,7 +74,10 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return super.tokenURI(tokenId);
+        return formatTokenURI(tokenId);
+
+
+
     }
 
     function supportsInterface(bytes4 interfaceId)
@@ -103,11 +116,11 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
 
         _safeMint(owner(), geocode);
 
-        _setTokenURI(geocode, formatTokenURI(geocode));
         
     }
 
-    function formatTokenURI(uint256 geocode) public pure returns (string memory) {
+
+    function formatTokenURI(uint256 geocode) public view returns (string memory) {
             return string(
                     abi.encodePacked(
                         "data:application/json;base64,",
@@ -117,9 +130,9 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
                                     '{"name": "PhantaSpace",', 
                                     '"description":"A space in PhantaSpace!",',
                                     ' "attributes":"",',
-                                    ' "image":"https://phanta.space/#/NFT/space/', Strings.toString(geocode),'",',
-                                    ' "animation_url":"https://phanta.space/#/NFT/space/', Strings.toString(geocode),'",',
-                                    ' "external_url":"https://phanta.space/#/space/', Strings.toString(geocode),'"',
+                                    ' "image":"', baseURL, Strings.toString(geocode),'",',
+                                    ' "animation_url":"', baseURL, Strings.toString(geocode),'",',
+                                    ' "external_url":"', baseURL, Strings.toString(geocode),'"',
                                     '}'
                                 )
                             )
@@ -138,7 +151,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
                                     '{',
                                     '"name": "PhantaSpace",',
                                     '"description": "Your own space in PhantaSpace",',
-                                    '"image": "https://phanta.space/favicon.ico",',
+                                    '"image": "https://phanta.space/favicon.svg",',
                                     '"external_link": "https://phanta.space",',
                                     '"seller_fee_basis_points": 10000,',
                                     '"fee_recipient": "', address2String(owner()), '"',
@@ -165,6 +178,21 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     function char(bytes1 b) internal pure returns (bytes1 c) {
         if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
         else return bytes1(uint8(b) + 0x57);
+    }
+
+    // function to split the space into subspaces
+    function mintSubspace(uint256 geocode, uint x, uint y, uint z) public {
+        require(x>=0 && x<=9, "x should be between 0 and 9");
+        require(y>=0 && y<=9, "y should be between 0 and 9");
+        require(z>=0 && z<=9, "z should be between 0 and 9");
+        require(_exists(geocode), "Space does not exist");
+        uint p = geocode % 10;
+        uint longitude = (geocode / 10**(1) % 10**(p + 3) * 10 + x) * 10;
+        uint latitude = (geocode / 10**(p + 4) % 10**(p + 3) * 10 + y) * 10**(p + 5);
+        uint levelSign = (geocode / 10**(2*p + 7) % 10) * 10**(2*(p+1) + 7);
+        uint level = (geocode / 10**(2*p+8) * 10 + z) * 10**(2*(p+1) + 8);
+        uint newGeocode = level + levelSign + latitude + longitude + p + 1;
+        _safeMint(ownerOf(geocode), newGeocode);
     }
 
 }

@@ -1,6 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require("hardhat-deploy");
 require("@openzeppelin/hardhat-upgrades");
+require("hardhat-gas-reporter");
+
 const { mnemonic, moralisApiKey } = require("./secrets.json");
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -26,7 +28,21 @@ module.exports = {
       default: 0,
     },
   },
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 1000,
+    },
+  },
+  defaultNetwork: "hardhat",
+  mocha: {
+    timeout: 4000000,
+  },
   networks: {
+    hardhat: {
+      blockGasLimit: 800000000000,
+      allowUnlimitedContractSize: true,
+    },
     rinkeby: {
       url: "https://YOUR_MORALIS_NODE_URL/eth/rinkeby",
       accounts: { mnemonic, mnemonic },
