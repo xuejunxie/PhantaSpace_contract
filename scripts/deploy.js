@@ -17,7 +17,9 @@ async function main() {
   const PhantaSpace = await ethers.getContractFactory("PhantaSpace");
 
   const precision = 1;
-  const phantaSpace = await PhantaSpace.deploy(precision);
+  const baseURL = "https://phanta.space/#/NFT/space/";
+  const externalURL = "https://phanta.space/#/space/";
+  const phantaSpace = await PhantaSpace.deploy(precision, baseURL, externalURL);
 
   await phantaSpace.deployed();
 
