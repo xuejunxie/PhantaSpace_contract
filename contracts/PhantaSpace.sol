@@ -27,22 +27,50 @@ import "hardhat/console.sol";
 
 contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable, ERC721Burnable {
     uint public precisionLimit;
-    string public baseURL;
+    string public imageURL;
+    string public animationURL;
     string public externalURL;
     uint public vendingPrice;
-    mapping (uint256 => bool) public inAuction;
-    mapping (uint256 => uint) public highestBid;
+    uint public auctionDuration;
 
-    constructor(uint _precision, string memory _baseURL, string memory _externalURL, uint _vendingPrice) ERC721("PhantaSpace", unicode"🌐") {
+    mapping (uint256 => uint) public auctionStartTime;
+    mapping (uint256 => mapping (address => uint)) public pendingReturns;
+    mapping (uint256 => uint) public highestBid;
+    mapping (uint256 => address) public highestBidder;
+
+    constructor(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration) ERC721("PhantaSpace", unicode"🌐") {
         precisionLimit = _precision;
-        baseURL = _baseURL;
+        imageURL = _imageURL;
+        animationURL = _animationURL;
         externalURL = _externalURL;
+        vendingPrice = _vendingPrice;
+        auctionDuration = _auctionDuration;
+    }
+
+    function setAuctionduration(uint _auctionDuration) public onlyOwner{
+        auctionDuration = _auctionDuration;
+    }
+
+    function setImageURL(string memory _imageURL) public onlyOwner {
+        imageURL = _imageURL;
+    }
+
+    function setAnimationURL (string memory _animationURL) public onlyOwner {
+        animationURL = _animationURL;
+    }
+
+    function setPrecisionLimit (uint _precision) public onlyOwner{
+        precisionLimit = _precision;
+    }
+
+    function setExternalURL (string memory _externalURL) public onlyOwner {
+        externalURL = _externalURL;
+    }
+
+    function setVendingPrice (uint _vendingPrice) public onlyOwner {
         vendingPrice = _vendingPrice;
     }
 
-    function setBaseURL (string memory _baseURL) public {
-        baseURL = _baseURL;
-    }
 
     function pause() public onlyOwner {
         _pause();
@@ -98,8 +126,9 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     
 // function to verify and mint with geocode as tokenID
 
-    function mint(uint256 geocode)
-        public
+    function checkGeocode(uint256 geocode)
+        internal
+        view
     {
         // verify the geocode is acceptable
         uint p = geocode % 10;
@@ -119,9 +148,6 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
             require(level <= 10**p, "Level should be less than 10**precision if it's negative");
         }
 
-        _safeMint(owner(), geocode);
-
-        
     }
 
 
@@ -135,8 +161,8 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
                                     '{"name": "PhantaSpace",', 
                                     '"description":"A space in PhantaSpace!",',
                                     ' "attributes":"",',
-                                    ' "image":"', baseURL, Strings.toString(geocode),'",',
-                                    ' "animation_url":"', baseURL, Strings.toString(geocode),'",',
+                                    ' "image":"', imageURL, Strings.toString(geocode),'",',
+                                    ' "animation_url":"', animationURL, Strings.toString(geocode),'",',
                                     ' "external_url":"', externalURL, Strings.toString(geocode),'"',
                                     '}'
                                 )
@@ -209,7 +235,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
             uint latitude = random / 3600 % 1800;
             uint geocode = level * 10**10 + levelSign * 10**9 + latitude * 10**5 + longitude * 10**1 + 1;
             console.log(geocode);
-            if (_exists(geocode) || inAuction[geocode]) {
+            if (_exists(geocode) || ! (auctionStartTime[geocode]==0)) {
                 n = n + 1;
             } else {
                 _safeMint(msg.sender, geocode);
@@ -218,91 +244,56 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     }
 
     // vending function
-    function vending() public payable {
+    function vending() external payable {
         require(msg.value > 0, "Value should be greater than 0");
         uint n = msg.value / vendingPrice;
         randomMint(0, 3, n);
+        console.log("time: ",block.timestamp);
     }
 
+    function startAuction(uint256 geocode) external payable {
+        require(msg.value > 0, "Value should be greater than 0");
+        checkGeocode(geocode);
+        require(!_exists(geocode), "Space is already minted");
+        require(auctionStartTime[geocode]==0, "Space is already in auction");
+        auctionStartTime[geocode] = block.timestamp;
+        highestBid[geocode] = msg.value;
+        highestBidder[geocode] = msg.sender;
 
-}
-contract EnglishAuction {
-    event Start();
-    event Bid(address indexed sender, uint amount);
-    event Withdraw(address indexed bidder, uint amount);
-    event End(address winner, uint amount);
-
-    IERC721 public nft;
-    uint public nftId;
-
-    address payable public seller;
-    uint public endAt;
-    bool public started;
-    bool public ended;
-
-    address public highestBidder;
-    uint public highestBid;
-    mapping(address => uint) public bids;
-
-    constructor(
-        address _nft,
-        uint _nftId,
-        uint _startingBid
-    ) {
-        nft = IERC721(_nft);
-        nftId = _nftId;
-
-        seller = payable(msg.sender);
-        highestBid = _startingBid;
     }
 
-    function start() external {
-        require(!started, "started");
-        require(msg.sender == seller, "not seller");
+    function bid(uint256 geocode) external payable {
+        require(msg.value > 0, "Value should be greater than 0");
+        checkGeocode(geocode);
+        require(!_exists(geocode), "Space is already minted");
+        require(!(auctionStartTime[geocode]==0), "Space is not on auction");
+        require(block.timestamp < (auctionStartTime[geocode] + auctionDuration), "Space auction is over");
+        require(msg.value > highestBid[geocode], "Bid should be greater than highest bid");
+        pendingReturns[geocode][highestBidder[geocode]] += highestBid[geocode];
+        highestBid[geocode] = msg.value;
+        highestBidder[geocode] = msg.sender;
 
-        nft.transferFrom(msg.sender, address(this), nftId);
-        started = true;
-        endAt = block.timestamp + 7 days;
-
-        emit Start();
     }
 
-    function bid() external payable {
-        require(started, "not started");
-        require(block.timestamp < endAt, "ended");
-        require(msg.value > highestBid, "value < highest");
+    function withdraw(uint256 geocode) external returns (bool) {
+        checkGeocode(geocode);
+        uint amount = pendingReturns[geocode][msg.sender];
+        if (amount > 0){
+            pendingReturns[geocode][msg.sender] = 0;
 
-        if (highestBidder != address(0)) {
-            bids[highestBidder] += highestBid;
-        }
-
-        highestBidder = msg.sender;
-        highestBid = msg.value;
-
-        emit Bid(msg.sender, msg.value);
+            if(!payable(msg.sender).send(amount)){
+                pendingReturns[geocode][msg.sender] = amount;
+                return false;
+            }
+        }        
+        return true;
     }
 
-    function withdraw() external {
-        uint bal = bids[msg.sender];
-        bids[msg.sender] = 0;
-        payable(msg.sender).transfer(bal);
+    function auctionEnd(uint256 geocode) external {
+        checkGeocode(geocode);
+        require(block.timestamp > auctionStartTime[geocode] + auctionDuration, "Space auction is not over");
+        require(!_exists(geocode), "Space is already minted");
 
-        emit Withdraw(msg.sender, bal);
-    }
-
-    function end() external {
-        require(started, "not started");
-        require(block.timestamp >= endAt, "not ended");
-        require(!ended, "ended");
-
-        ended = true;
-        if (highestBidder != address(0)) {
-            nft.safeTransferFrom(address(this), highestBidder, nftId);
-            seller.transfer(highestBid);
-        } else {
-            nft.safeTransferFrom(address(this), seller, nftId);
-        }
-
-        emit End(highestBidder, highestBid);
+        _safeMint(highestBidder[geocode], geocode);
     }
 }

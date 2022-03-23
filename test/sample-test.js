@@ -9,10 +9,19 @@ describe("PhantaSpace", function () {
 
     console.log("deploying PhantaSpace");
     const precision = 1;
-    const baseURL = "https://phanta.space/#/NFT/space/";
+    const imageURL = "https://phanta.space/#/NFT/space/";
+    const animationURL = "https://phanta.space/#/NFT/space/";
     const externalURL = "https://phanta.space/#/space/";
     const vendingPrice = ethers.utils.parseEther("0.01");
-    const phantaSpace = await PhantaSpace.deploy(precision, baseURL, externalURL, vendingPrice);
+    const auctionDuration = 24 * 3600;
+    const phantaSpace = await PhantaSpace.deploy(
+      precision,
+      imageURL,
+      animationURL,
+      externalURL,
+      vendingPrice,
+      auctionDuration
+    );
     await phantaSpace.deployed();
     console.log("phantaSpace deployed to :", phantaSpace.address);
 
@@ -23,13 +32,19 @@ describe("PhantaSpace", function () {
     console.log("Contract address :", contractAddresss);
 
     const vending = await phantaSpace.vending({
-      value: ethers.utils.parseEther("0.1"),
+      value: ethers.utils.parseEther("0.01"),
     });
     console.log("random :", vending);
 
+    await phantaSpace.startAuction(3130710591, {
+      value: ethers.utils.parseEther("0.01"),
+    });
+    await network.provider.send("evm_increaseTime", [24 * 3600 + 1]);
+    await phantaSpace.auctionEnd(3130710591);
+
     // const newAuction = await phantaSpace.newAuction();
     // console.log("newAuction :", newAuction);
-    const result = await phantaSpace.mint(3130710591);
+    // const result = await phantaSpace.mint(3130710591);
 
     // const contractURI = await phantaSpace.contractURI();
     // console.log(contractURI);
@@ -37,8 +52,8 @@ describe("PhantaSpace", function () {
     // const subspace = await phantaSpace.mintSubspace(3130710591, 9, 9, 9);
     // console.log(subspace);
 
-    // const tokenURI = await phantaSpace.tokenURI(3130710591);
-    // console.log("=========================", tokenURI);
+    const tokenURI = await phantaSpace.tokenURI(3130710591);
+    console.log("=========================", tokenURI);
 
     // await phantaSpace.setBaseURL("https://phanta.space/#/");
 
@@ -54,8 +69,8 @@ describe("PhantaSpace", function () {
 
 // describe("Auction", function () {
 //   it("Auction test", async function () {
-//     const simpleAuction = await ethers.getContractFactory("SimpleAuction");
-//     const auction = await simpleAuction.deploy(1000, "0xc12Fbb46Ebc085DCaaEd8a9b47e5B557B9490233");
+//     const EnglishAuction = await ethers.getContractFactory("EnglishAuction");
+//     const auction = await EnglishAuction.deploy("0xc12Fbb46Ebc085DCaaEd8a9b47e5B557B9490233");
 
 //     await auction.deployed();
 
