@@ -5,6 +5,8 @@ const { ethers } = require("hardhat");
 describe("PhantaSpace", function () {
   // test uint256 slice function
   it("Deploy test", async function () {
+    const [owner, addr1, addr2] = await ethers.getSigners();
+
     const PhantaSpace = await ethers.getContractFactory("PhantaSpace");
 
     console.log("deploying PhantaSpace");
@@ -36,11 +38,22 @@ describe("PhantaSpace", function () {
     });
     console.log("random :", vending);
 
-    await phantaSpace.startAuction(3130710591, {
+    await phantaSpace.genesisAuction(3130710591, {
       value: ethers.utils.parseEther("0.01"),
     });
-    await network.provider.send("evm_increaseTime", [24 * 3600 + 1]);
+    await network.provider.send("evm_increaseTime", [14 * 3600]);
+
+    await phantaSpace.connect(addr1).bid(3130710591, {
+      value: ethers.utils.parseEther("0.02"),
+    });
+
+    await network.provider.send("evm_increaseTime", [14 * 3600]);
+
     await phantaSpace.auctionEnd(3130710591);
+
+    console.log(addr1.address);
+    const NFTowner = await phantaSpace.ownerOf(3130710591);
+    console.log("NFT owner :", NFTowner);
 
     // const newAuction = await phantaSpace.newAuction();
     // console.log("newAuction :", newAuction);
@@ -66,15 +79,3 @@ describe("PhantaSpace", function () {
     // console.log(mnemonicWallet.privateKey);
   });
 });
-
-// describe("Auction", function () {
-//   it("Auction test", async function () {
-//     const EnglishAuction = await ethers.getContractFactory("EnglishAuction");
-//     const auction = await EnglishAuction.deploy("0xc12Fbb46Ebc085DCaaEd8a9b47e5B557B9490233");
-
-//     await auction.deployed();
-
-//     const auctionAddress = await auction.address;
-//     console.log("Auction address :", auctionAddress);
-//   });
-// });

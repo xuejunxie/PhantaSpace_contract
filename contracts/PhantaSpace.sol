@@ -37,6 +37,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     mapping (uint256 => mapping (address => uint)) public pendingReturns;
     mapping (uint256 => uint) public highestBid;
     mapping (uint256 => address) public highestBidder;
+    mapping (uint256 => bool) public availableForAuction;
 
     constructor(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration) ERC721("PhantaSpace", unicode"🌐") {
         precisionLimit = _precision;
@@ -128,11 +129,11 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
 
     function checkGeocode(uint256 geocode)
         internal
-        view
+        pure
     {
         // verify the geocode is acceptable
         uint p = geocode % 10;
-        require(p <= precisionLimit, "Precision not yet available");
+        require(p > 0, "Precision must be greater than 0");
 
         uint longitude = geocode / 10**(p+1) % 1000;
         require(longitude <= 360, "Longitude show be less than 360");
@@ -251,15 +252,46 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         console.log("time: ",block.timestamp);
     }
 
-    function startAuction(uint256 geocode) external payable {
+    function genesisAuction(uint256 geocode) external payable {
         require(msg.value > 0, "Value should be greater than 0");
         checkGeocode(geocode);
+        require(geocode % 10 == 1, "precision should be 1 for genesis auction");
         require(!_exists(geocode), "Space is already minted");
         require(auctionStartTime[geocode]==0, "Space is already in auction");
         auctionStartTime[geocode] = block.timestamp;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
 
+    }
+
+    function putSubspaceToAuciton(uint256 geocode) external {
+        checkGeocode(geocode);
+        require (!_exists(geocode), "minted subspace dosen't need on chain auction"); 
+        require(ownerOf(parent(geocode)) == msg.sender, "Only space owner can do auction");
+        availableForAuction[geocode] = true;
+    }
+
+    function holderAuction(uint256 geocode) external payable {
+        require(msg.value > 0, "Value should be greater than 0");
+        checkGeocode(geocode);
+        require (!_exists(geocode), "minted subspace dosen't need on chain auction"); 
+        require(ownerOf(parent(geocode)) == msg.sender, "Only space owner can do auction");
+        require(availableForAuction[geocode], "Space is not available for auction");
+        require(auctionStartTime[geocode]==0, "Space is already in auction");
+        auctionStartTime[geocode] = block.timestamp;
+        highestBid[geocode] = msg.value;
+        highestBidder[geocode] = msg.sender;
+
+    }
+
+    function parent(uint256 geocode) internal pure returns (uint256 parentGeocode) {
+        uint p = geocode % 10;
+        require(p>1, "You are naughty. Top spaces don't have parent");
+        uint longitude = geocode / 100;
+        uint latitude = geocode / 10**(p+5);
+        uint levelSign = geocode / 10**(2*p + 7) % 10;
+        uint level = geocode / 10**(2*p+8);
+        parentGeocode = level*10**(2*p+6) + levelSign*10**(2*p+5) + latitude * 10**(p+3) + longitude * 10 + p-1;
     }
 
     function bid(uint256 geocode) external payable {
@@ -293,7 +325,6 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         checkGeocode(geocode);
         require(block.timestamp > auctionStartTime[geocode] + auctionDuration, "Space auction is not over");
         require(!_exists(geocode), "Space is already minted");
-
         _safeMint(highestBidder[geocode], geocode);
     }
 }
