@@ -9,10 +9,11 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
-contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
+contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     uint public precisionLimit;
     string public imageURL;
@@ -45,6 +46,7 @@ contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeabl
         __Ownable_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
+        __ERC721Royalty_init();
 
         precisionLimit = _precision;
         imageURL = _imageURL;
@@ -53,7 +55,8 @@ contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeabl
         vendingPrice = _vendingPrice;
         auctionDuration = _auctionDuration;
         royaltyFeesInBips = _royaltyFeesInBips;
-        // _setDefaultRoyalty(owner(), _royaltyFeesInBips);
+        _setDefaultRoyalty(owner(), _royaltyFeesInBips);
+
     }
 
 
@@ -81,9 +84,9 @@ contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeabl
         vendingPrice = _vendingPrice;
     }
 
-    // function setRoyaltyInfo(address _receiver, uint96 _royaltyFeesInBips) public onlyOwner {
-    //     _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
-    // }
+    function setRoyaltyInfo(address _receiver, uint96 _royaltyFeesInBips) public onlyOwner {
+        _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
+    }
 
 
     function pause() public onlyOwner {
@@ -120,7 +123,7 @@ contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeabl
 
     function _burn(uint256 tokenId)
         internal
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+        override(ERC721Upgradeable, ERC721URIStorageUpgradeable, ERC721RoyaltyUpgradeable)
     {
         super._burn(tokenId);
     }
@@ -137,7 +140,7 @@ contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeabl
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721RoyaltyUpgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

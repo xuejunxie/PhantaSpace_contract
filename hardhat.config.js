@@ -51,7 +51,7 @@ module.exports = {
     },
     rinkeby: {
       url: "https://YOUR_MORALIS_NODE_URL/eth/rinkeby",
-      accounts: { mnemonic, mnemonic },
+      accounts: { mnemonic: mnemonic },
     },
   },
   etherscan: {
