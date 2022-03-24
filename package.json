@@ -12,6 +12,7 @@
     "hardhat-gas-reporter": "^1.0.8"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
     "@openzeppelin/contracts-upgradeable": "^4.5.2",
     "base64-sol": "^1.1.0",
     "hardhat-deploy": "^0.10.6"

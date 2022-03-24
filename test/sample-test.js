@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { base64 } = require("ethers/lib/utils");
-const { ethers } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 
 describe("PhantaSpace", function () {
   // test uint256 slice function
@@ -94,5 +94,33 @@ describe("PhantaSpace", function () {
     // let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
     // console.log("==========================");
     // console.log(mnemonicWallet.privateKey);
+  });
+});
+
+describe("MyToken", function () {
+  it("deploys", async function () {
+    const precision = 1;
+    const imageURL = "https://tset/";
+    const animationURL = "https://teset/";
+    const externalURL = "https://test/";
+    const vendingPrice = ethers.utils.parseEther("0.08");
+    const auctionDuration = 24 * 3600;
+    const royalty = 10000;
+
+    const MyTokenV1 = await ethers.getContractFactory("MyToken");
+
+    const test = await upgrades.deployProxy(MyTokenV1, [
+      precision,
+      imageURL,
+      animationURL,
+      externalURL,
+      vendingPrice,
+      auctionDuration,
+      royalty,
+    ]);
+
+    console.log("MyTokenV1 deployed to :", test.address);
+
+    // console.log("newContract :", newContract);
   });
 });

@@ -1,5 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-etherscan");
+
 require("hardhat-deploy");
 require("@openzeppelin/hardhat-upgrades");
 require("hardhat-gas-reporter");
@@ -51,5 +53,8 @@ module.exports = {
       url: "https://YOUR_MORALIS_NODE_URL/eth/rinkeby",
       accounts: { mnemonic, mnemonic },
     },
+  },
+  etherscan: {
+    apiKey: "YOUR_ETHERSCAN_API_KEY",
   },
 };

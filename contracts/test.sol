@@ -1,29 +1,19 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.4;
 
-
-//   _____  _                 _         _____                      
-//  |  __ \| |               | |       / ____|                     
-//  | |__) | |__   __ _ _ __ | |_ __ _| (___  _ __   __ _  ___ ___ 
-//  |  ___/| '_ \ / _` | '_ \| __/ _` |\___ \| '_ \ / _` |/ __/ _ \
-//  | |    | | | | (_| | | | | || (_| |____) | |_) | (_| | (_|  __/
-//  |_|    |_| |_|\__,_|_| |_|\__\__,_|_____/| .__/ \__,_|\___\___|
-//                                           | |                   
-//                                           |_|                   
-
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "base64-sol/base64.sol";
-import "hardhat/console.sol";
 
-
-contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable, ERC721Burnable, ERC721Royalty {
+contract MyToken is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
+    /// @custom:oz-upgrades-unsafe-allow constructor
     uint public precisionLimit;
     string public imageURL;
     string public animationURL;
@@ -47,7 +37,15 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     event SubSpaceAuctionStarted(uint256 geocode, uint256 startTime);
 
 
-    constructor(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) ERC721("PhantaSpace", unicode"🌐") {
+    function initialize(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) initializer public {
+        __ERC721_init("MyToken", "MTK");
+        __ERC721Enumerable_init();
+        __ERC721URIStorage_init();
+        __Pausable_init();
+        __Ownable_init();
+        __ERC721Burnable_init();
+        __UUPSUpgradeable_init();
+
         precisionLimit = _precision;
         imageURL = _imageURL;
         animationURL = _animationURL;
@@ -55,9 +53,9 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         vendingPrice = _vendingPrice;
         auctionDuration = _auctionDuration;
         royaltyFeesInBips = _royaltyFeesInBips;
-        _setDefaultRoyalty(owner(), _royaltyFeesInBips);
-
+        // _setDefaultRoyalty(owner(), _royaltyFeesInBips);
     }
+
 
     function setAuctionduration(uint _auctionDuration) public onlyOwner{
         auctionDuration = _auctionDuration;
@@ -83,9 +81,9 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         vendingPrice = _vendingPrice;
     }
 
-    function setRoyaltyInfo(address _receiver, uint96 _royaltyFeesInBips) public onlyOwner {
-        _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
-    }
+    // function setRoyaltyInfo(address _receiver, uint96 _royaltyFeesInBips) public onlyOwner {
+    //     _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
+    // }
 
 
     function pause() public onlyOwner {
@@ -107,40 +105,44 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
         whenNotPaused
-        override(ERC721, ERC721Enumerable)
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
     {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        onlyOwner
+        override
+    {}
+
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage, ERC721Royalty) {
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+    {
         super._burn(tokenId);
     }
 
     function tokenURI(uint256 tokenId)
         public
         view
-        override(ERC721, ERC721URIStorage)
+        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
         returns (string memory)
     {
-        return formatTokenURI(tokenId);
-
-
-
+        return super.tokenURI(tokenId);
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable, ERC721Royalty)
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
     }
 
-    
-// function to verify and mint with geocode as tokenID
 
     function checkGeocode(uint256 geocode)
         internal
