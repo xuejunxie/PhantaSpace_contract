@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.13;
 
 
 //   _____  _                 _         _____                      
@@ -11,7 +11,6 @@ pragma solidity ^0.8.4;
 //                                           | |                   
 //                                           |_|                   
 
-
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -19,19 +18,19 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "base64-sol/base64.sol";
 
-import "hardhat/console.sol";
 
 
-contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable, ERC721Burnable {
+contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable, ERC721Burnable, ERC721Royalty {
     uint public precisionLimit;
     string public imageURL;
     string public animationURL;
     string public externalURL;
     uint public vendingPrice;
     uint public auctionDuration;
+    uint public royaltyFeesInBips;
 
     mapping (uint256 => uint) public auctionStartTime;
     mapping (uint256 => mapping (address => uint)) public pendingReturns;
@@ -39,13 +38,25 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     mapping (uint256 => address) public highestBidder;
     mapping (uint256 => bool) public availableForAuction;
 
-    constructor(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration) ERC721("PhantaSpace", unicode"🌐") {
+    event AuctionStarted(uint256 geocode, uint256 startTime);
+    event AuctionEnded(uint256 geocode, address highestBidder, uint256 highestBid);
+    event HighestBidIncreased(uint256 geocode,address bidder, uint256 bid);
+    event VendingHappend(uint256[] geocodes);
+    event SubSpaceMinted(uint256 geocode);
+    event SubSpaceAuctionAllowed(uint256 geocode);
+    event SubSpaceAuctionStarted(uint256 geocode, uint256 startTime);
+
+
+    constructor(uint _precision, string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) ERC721("PhantaSpace", unicode"🌐") {
         precisionLimit = _precision;
         imageURL = _imageURL;
         animationURL = _animationURL;
         externalURL = _externalURL;
         vendingPrice = _vendingPrice;
         auctionDuration = _auctionDuration;
+        royaltyFeesInBips = _royaltyFeesInBips;
+        _setDefaultRoyalty(owner(), _royaltyFeesInBips);
+
     }
 
     function setAuctionduration(uint _auctionDuration) public onlyOwner{
@@ -70,6 +81,10 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
 
     function setVendingPrice (uint _vendingPrice) public onlyOwner {
         vendingPrice = _vendingPrice;
+    }
+
+    function setRoyaltyInfo(address _receiver, uint96 _royaltyFeesInBips) public onlyOwner {
+        _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
     }
 
 
@@ -99,7 +114,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage, ERC721Royalty) {
         super._burn(tokenId);
     }
 
@@ -118,7 +133,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable)
+        override(ERC721, ERC721Enumerable, ERC721Royalty)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
@@ -185,7 +200,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
                                     '"description": "Your own space in PhantaSpace",',
                                     '"image": "https://phanta.space/favicon.svg",',
                                     '"external_link": "https://phanta.space",',
-                                    '"seller_fee_basis_points": 10000,',
+                                    '"seller_fee_basis_points": ', Strings.toString(royaltyFeesInBips),',',
                                     '"fee_recipient": "', address2String(owner()), '"',
                                     '}'
                                 )
@@ -226,20 +241,21 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         uint level = (geocode / 10**(2*p+8) * 10 + z) * 10**(2*(p+1) + 8);
         uint newGeocode = level + levelSign + latitude + longitude + p + 1;
         _safeMint(ownerOf(geocode), newGeocode);
+        emit SubSpaceMinted(newGeocode);
     }
 
     // random function
-    function randomMint(uint level, uint levelSign, uint n) internal  {
+    function randomMint(uint level, uint levelSign, uint n) internal returns(uint256[] memory geocodes) {
         for (uint i = 0; i < n; i++) {
             uint256 random = uint(keccak256(abi.encodePacked(block.number, block.timestamp, block.difficulty, msg.sender, level, i)));
             uint longitude = random % 3600;
             uint latitude = random / 3600 % 1800;
             uint geocode = level * 10**10 + levelSign * 10**9 + latitude * 10**5 + longitude * 10**1 + 1;
-            console.log(geocode);
             if (_exists(geocode) || ! (auctionStartTime[geocode]==0)) {
-                n = n + 1;
+                i = i - 1;
             } else {
                 _safeMint(msg.sender, geocode);
+                geocodes[i] = geocode;
             }
         }
     }
@@ -248,8 +264,8 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
     function vending() external payable {
         require(msg.value > 0, "Value should be greater than 0");
         uint n = msg.value / vendingPrice;
-        randomMint(0, 3, n);
-        console.log("time: ",block.timestamp);
+        uint256[] memory geocodes = randomMint(0, 3, n);
+        emit VendingHappend(geocodes);
     }
 
     function genesisAuction(uint256 geocode) external payable {
@@ -261,6 +277,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         auctionStartTime[geocode] = block.timestamp;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
+        emit AuctionStarted(geocode, block.timestamp);
 
     }
 
@@ -269,6 +286,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         require (!_exists(geocode), "minted subspace dosen't need on chain auction"); 
         require(ownerOf(parent(geocode)) == msg.sender, "Only space owner can do auction");
         availableForAuction[geocode] = true;
+        emit SubSpaceAuctionAllowed(geocode);
     }
 
     function holderAuction(uint256 geocode) external payable {
@@ -281,7 +299,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         auctionStartTime[geocode] = block.timestamp;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
-
+        emit SubSpaceAuctionStarted(geocode, block.timestamp);
     }
 
     function parent(uint256 geocode) internal pure returns (uint256 parentGeocode) {
@@ -304,6 +322,7 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         pendingReturns[geocode][highestBidder[geocode]] += highestBid[geocode];
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
+        emit HighestBidIncreased(geocode, msg.sender, msg.value);
 
     }
 
@@ -326,5 +345,6 @@ contract PhantaSpace is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ow
         require(block.timestamp > auctionStartTime[geocode] + auctionDuration, "Space auction is not over");
         require(!_exists(geocode), "Space is already minted");
         _safeMint(highestBidder[geocode], geocode);
+        emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
     }
 }

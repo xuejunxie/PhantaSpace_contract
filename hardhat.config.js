@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
 require("hardhat-deploy");
 require("@openzeppelin/hardhat-upgrades");
 require("hardhat-gas-reporter");
@@ -23,7 +24,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   solidity: {
-    version: "0.8.4",
+    version: "0.8.13",
     settings: {
       optimizer: {
         enabled: true,

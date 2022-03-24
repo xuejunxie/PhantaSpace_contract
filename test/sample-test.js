@@ -14,15 +14,32 @@ describe("PhantaSpace", function () {
     const imageURL = "https://phanta.space/#/NFT/space/";
     const animationURL = "https://phanta.space/#/NFT/space/";
     const externalURL = "https://phanta.space/#/space/";
-    const vendingPrice = ethers.utils.parseEther("0.01");
+    const vendingPrice = ethers.utils.parseEther("0.08");
     const auctionDuration = 24 * 3600;
+    const royalty = 10000;
+    // const contractURI =
+    //   "data:application/json;base64," +
+    //   base64.encode(
+    //     "{" +
+    //       '"name": "PhantaSpace"' +
+    //       '"description": "Your own space in PhantaSpace",' +
+    //       '"image": "https://phanta.space/favicon.svg",' +
+    //       '"external_link": "https://phanta.space",' +
+    //       '"seller_fee_basis_points": 10000,' +
+    //       '"fee_recipient": "' +
+    //       owner.address +
+    //       '"' +
+    //       "}"
+    //   );
+    // const contractURI = "data:application/json;base64,";
     const phantaSpace = await PhantaSpace.deploy(
       precision,
       imageURL,
       animationURL,
       externalURL,
       vendingPrice,
-      auctionDuration
+      auctionDuration,
+      royalty
     );
     await phantaSpace.deployed();
     console.log("phantaSpace deployed to :", phantaSpace.address);
