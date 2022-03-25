@@ -5,6 +5,7 @@ require("@nomiclabs/hardhat-etherscan");
 require("hardhat-deploy");
 require("@openzeppelin/hardhat-upgrades");
 require("hardhat-gas-reporter");
+require("dotenv").config();
 
 const { mnemonic, moralisApiKey } = require("./secrets.json");
 
@@ -26,7 +27,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 module.exports = {
   solidity: {
-    version: "0.8.13",
+    version: "0.8.4",
     settings: {
       optimizer: {
         enabled: true,
@@ -50,11 +51,17 @@ module.exports = {
       allowUnlimitedContractSize: true,
     },
     rinkeby: {
-      url: "https://YOUR_MORALIS_NODE_URL/eth/rinkeby",
-      accounts: { mnemonic: mnemonic },
+      url: process.env.Rinkeby_URL,
+      accounts: { mnemonic: process.env.Rinkeby_account_mnemonic },
     },
   },
   etherscan: {
-    apiKey: "YOUR_ETHERSCAN_API_KEY",
+    apiKey: process.env.Etherscan_api,
+  },
+  gasReporter: {
+    enabled: true,
+    gasPriceApi: process.env.Gas_price_api,
+    currency: "USD",
+    coinmarketcap: process.env.Coin_market_cap_api,
   },
 };

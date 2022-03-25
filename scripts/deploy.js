@@ -3,6 +3,7 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
+const { upgrades } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
@@ -14,16 +15,24 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const PhantaSpace = await ethers.getContractFactory("PhantaSpace");
+  phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
 
-  const precision = 1;
-  const baseURL = "https://phanta.space/#/NFT/space/";
+  const imageURL = "https://phanta.space/#/NFT/space/";
+  const animationURL = "https://phanta.space/#/NFT/space/";
   const externalURL = "https://phanta.space/#/space/";
-  const phantaSpace = await PhantaSpace.deploy(precision, baseURL, externalURL);
+  const vendingPrice = ethers.utils.parseEther("0.01");
+  const auctionDuration = 24 * 3600;
+  const royalty = 1000;
 
-  await phantaSpace.deployed();
+  deployed_contract = await upgrades.deployProxy(
+    phantaSpace_contract,
+    [imageURL, animationURL, externalURL, vendingPrice, auctionDuration, royalty],
+    {
+      kind: "uups",
+    }
+  );
 
-  console.log("phantaSpace deployed to :", phantaSpace.address);
+  console.log("deployed_contract :", deployed_contract.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

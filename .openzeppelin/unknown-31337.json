@@ -1,25 +1,61 @@
 {
   "manifestVersion": "3.2",
-  "admin": {
-    "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    "txHash": "0x51ce2d1013bb204b5ffd1b871548318ef3dc1a21dc47a05b8de111b583e58075"
-  },
   "proxies": [
     {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x4a94529e8cd35f77a871e056c40893d611407158ae5c929ce6925bd869160b54",
-      "kind": "transparent"
+      "txHash": "0xc0ae16ef0c2b3fded31f33f4a5db38b85b029e7361e2697f6965c7e5d7748868",
+      "kind": "uups"
+    },
+    {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x448284deb90bfe39fb3a200bfa1e42f0d2b47e319e8e88d2250aff8ad906afdc",
+      "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0x8f1faa3856818e9c3327bd0f161704f549ba284d8d2a07ddcf0d21571ae743ec",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0xda8faf7b68cf088793aa67848e4c87df46b7fc48f28860699b059efe447ffadc",
+      "kind": "uups"
+    },
+    {
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "txHash": "0xe6e7194f05b8a24bd62a0cc8c12f2315e764da224d8d6772a94c6b9250abfe9a",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0x0ce2a61098965aeea48041e754b588a0b76f00f70134618de85517f621bff485",
+      "kind": "uups"
+    },
+    {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0x9b9c0a55ef1da309bca92c5b5c5d280bb400d1759f13580074991e13670d3288",
+      "kind": "uups"
     },
     {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x65c2acb54e36a3c17dbd869295824fc84e53aaf011fa74317cf05c7767df8389",
+      "txHash": "0xe30c8c5753a2cb2969a92ce31c8bc724a8fe2a5c922152c9e3a6f6af885fb6cb",
+      "kind": "uups"
+    },
+    {
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "txHash": "0x6f1e2fbdd0c32510b65f07197dfab8cfe260e755ca9a7bfb2f258fbcd2417809",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0x0080957a2149a990963ed42309c4897e125b00b8a6a86866c897755608fad2a2",
       "kind": "uups"
     }
   ],
   "impls": {
-    "bed0fe29f4c80a7b3918883d429094cd299c978d492535ad1a6def80ddd90cc8": {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0x518674026f9073972502c33e328e10387d2c4274457a76d7078629606c12cb68",
+    "e87074e051e478fff2f9b2018c2a27d958dc87cc55d21409d250ab403930b14a": {
+      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "txHash": "0x0b56cb34fe05dc4f7c57acacb8f678195c3481a99a984553212f266f50f4170f",
       "layout": {
         "storage": [
           {
@@ -58,7 +94,7 @@
             "label": "_defaultRoyaltyInfo",
             "offset": 0,
             "slot": "101",
-            "type": "t_struct(RoyaltyInfo)2586_storage",
+            "type": "t_struct(RoyaltyInfo)2536_storage",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:36"
           },
@@ -66,7 +102,7 @@
             "label": "_tokenRoyaltyInfo",
             "offset": 0,
             "slot": "102",
-            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)2586_storage)",
+            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)2536_storage)",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:37"
           },
@@ -227,21 +263,13 @@
             "offset": 0,
             "slot": "401",
             "type": "t_array(t_uint256)50_storage",
-            "contract": "ERC721BurnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol:38"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "451",
-            "type": "t_array(t_uint256)50_storage",
             "contract": "ERC1967UpgradeUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
           },
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "501",
+            "slot": "451",
             "type": "t_array(t_uint256)50_storage",
             "contract": "UUPSUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
@@ -249,106 +277,106 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "551",
+            "slot": "501",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ERC721RoyaltyUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol:50"
           },
           {
-            "label": "precisionLimit",
-            "offset": 0,
-            "slot": "601",
-            "type": "t_uint256",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:18"
-          },
-          {
             "label": "imageURL",
             "offset": 0,
-            "slot": "602",
+            "slot": "551",
             "type": "t_string_storage",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:19"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:29"
           },
           {
             "label": "animationURL",
             "offset": 0,
-            "slot": "603",
+            "slot": "552",
             "type": "t_string_storage",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:20"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:30"
           },
           {
             "label": "externalURL",
             "offset": 0,
-            "slot": "604",
+            "slot": "553",
             "type": "t_string_storage",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:21"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:31"
           },
           {
             "label": "vendingPrice",
             "offset": 0,
-            "slot": "605",
+            "slot": "554",
             "type": "t_uint256",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:22"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:32"
           },
           {
             "label": "auctionDuration",
             "offset": 0,
-            "slot": "606",
+            "slot": "555",
             "type": "t_uint256",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:23"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:33"
           },
           {
             "label": "royaltyFeesInBips",
             "offset": 0,
-            "slot": "607",
+            "slot": "556",
             "type": "t_uint256",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:24"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:34"
+          },
+          {
+            "label": "contractURI",
+            "offset": 0,
+            "slot": "557",
+            "type": "t_string_storage",
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:35"
           },
           {
             "label": "auctionStartTime",
             "offset": 0,
-            "slot": "608",
+            "slot": "558",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:26"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:37"
           },
           {
             "label": "pendingReturns",
             "offset": 0,
-            "slot": "609",
+            "slot": "559",
             "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:27"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:38"
           },
           {
             "label": "highestBid",
             "offset": 0,
-            "slot": "610",
+            "slot": "560",
             "type": "t_mapping(t_uint256,t_uint256)",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:28"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:39"
           },
           {
             "label": "highestBidder",
             "offset": 0,
-            "slot": "611",
+            "slot": "561",
             "type": "t_mapping(t_uint256,t_address)",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:29"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:40"
           },
           {
             "label": "availableForAuction",
             "offset": 0,
-            "slot": "612",
+            "slot": "562",
             "type": "t_mapping(t_uint256,t_bool)",
-            "contract": "MyToken",
-            "src": "contracts/test.sol:30"
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:41"
           }
         ],
         "types": {
@@ -416,7 +444,7 @@
             "label": "mapping(uint256 => string)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(RoyaltyInfo)2586_storage)": {
+          "t_mapping(t_uint256,t_struct(RoyaltyInfo)2536_storage)": {
             "label": "mapping(uint256 => struct ERC2981Upgradeable.RoyaltyInfo)",
             "numberOfBytes": "32"
           },
@@ -428,7 +456,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(RoyaltyInfo)2586_storage": {
+          "t_struct(RoyaltyInfo)2536_storage": {
             "label": "struct ERC2981Upgradeable.RoyaltyInfo",
             "members": [
               {
