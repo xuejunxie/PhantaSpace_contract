@@ -37,7 +37,7 @@ describe("PhantaSpace", function () {
     rawContractURI = {
       name: "PhantaSpace",
       description: "Your own space in PhantaSpace",
-      image: "https://phanta.space/favicon.svg",
+      image: "https://phanta.space/favicon.gif",
       external_link: "https://phanta.space",
       seller_fee_basis_points: royalty,
       fee_recipient: owner.address,

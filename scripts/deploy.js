@@ -22,13 +22,13 @@ async function main() {
   const animationURL = "https://phanta.space/#/NFT/space/";
   const externalURL = "https://phanta.space/#/space/";
   const vendingPrice = ethers.utils.parseEther("0.01");
-  const auctionDuration = 24 * 3600;
+  const auctionDuration = 48 * 3600;
   const royalty = 1000;
 
   const rawContractURI = {
     name: "PhantaSpace",
     description: "Your own space in PhantaSpace",
-    image: "https://phanta.space/favicon.svg",
+    image: "https://phanta.space/favicon.gif",
     external_link: "https://phanta.space",
     seller_fee_basis_points: royalty,
     fee_recipient: owner.address,

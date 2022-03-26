@@ -192,12 +192,12 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
                         Base64.encode(
                             bytes(
                                 abi.encodePacked(
-                                    '{"name":"PhantaSpace",', 
+                                    '{"name":"PhantaSpace ', Strings.toString(geocode), '",',
                                     '"description":"A space in PhantaSpace!",',
-                                    ' "attributes":"",',
-                                    ' "image":"', imageURL, Strings.toString(geocode),'.jpg",',
-                                    ' "animation_url":"', animationURL, Strings.toString(geocode),'",',
-                                    ' "external_url":"', externalURL, Strings.toString(geocode),'"',
+                                    '"attributes":"",',
+                                    '"image":"', imageURL, Strings.toString(geocode),'.jpg",',
+                                    '"animation_url":"', animationURL, Strings.toString(geocode),'",',
+                                    '"external_url":"', externalURL, Strings.toString(geocode),'"',
                                     '}'
                                 )
                             )
