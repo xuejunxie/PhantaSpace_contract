@@ -195,7 +195,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
                                     '{"name":"PhantaSpace",', 
                                     '"description":"A space in PhantaSpace!",',
                                     ' "attributes":"",',
-                                    ' "image":"', imageURL, Strings.toString(geocode),'",',
+                                    ' "image":"', imageURL, Strings.toString(geocode),'.jpg",',
                                     ' "animation_url":"', animationURL, Strings.toString(geocode),'",',
                                     ' "external_url":"', externalURL, Strings.toString(geocode),'"',
                                     '}'
@@ -245,7 +245,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
         for (uint i = 0; i < n; i++) {
             uint256 random = uint(keccak256(abi.encodePacked(block.number, block.timestamp, block.difficulty, msg.sender, level, i)));
             uint longitude = random % 3600;
-            uint latitude = random / 3600 % 1800;
+            uint latitude = random / 3600 % 1700 + 50;  // limit the venting range withing 50 to 1750 for better user experience.
             uint geocode = level * 10**10 + levelSign * 10**9 + latitude * 10**5 + longitude * 10**1 + 1;
             if (_exists(geocode) || ! (auctionStartTime[geocode]==0)) {
                 n = n + 1;

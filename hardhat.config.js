@@ -45,8 +45,8 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      blockGasLimit: 800000000000,
-      allowUnlimitedContractSize: true,
+      blockGasLimit: 10000000,
+      allowUnlimitedContractSize: false,
     },
     rinkeby: {
       url: process.env.Rinkeby_URL,

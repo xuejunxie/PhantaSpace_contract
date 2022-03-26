@@ -27,7 +27,7 @@ describe("PhantaSpace", function () {
     phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
-    imageURL = "https://phanta.space/#/NFT/space/";
+    imageURL = "http://phantaspace.com/";
     animationURL = "https://phanta.space/#/NFT/space/";
     externalURL = "https://phanta.space/#/space/";
     vendingPrice = ethers.utils.parseEther("0.01");
@@ -123,6 +123,16 @@ describe("PhantaSpace", function () {
       let geocode = 3130710591;
       const tokenURI = await deployed_contract.tokenURI(geocode);
       console.log("tokenURI :", tokenURI);
+    });
+  });
+
+  describe("safeMint", function () {
+    it("should mint a space token", async function () {
+      const geocode = 3130710591;
+      await deployed_contract.safeMint(addr1.address, geocode);
+      const NFTowner = await deployed_contract.ownerOf(geocode);
+      console.log("NFT owner :", NFTowner);
+      expect(NFTowner).to.equal(addr1.address);
     });
   });
 });
