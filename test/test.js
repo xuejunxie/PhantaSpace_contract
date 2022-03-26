@@ -27,7 +27,7 @@ describe("PhantaSpace", function () {
     phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
-    imageURL = "http://phantaspace.com/";
+    imageURL = "http://phantaspace.com/thumbnails/";
     animationURL = "https://phanta.space/#/NFT/space/";
     externalURL = "https://phanta.space/#/space/";
     vendingPrice = ethers.utils.parseEther("0.01");
@@ -36,7 +36,7 @@ describe("PhantaSpace", function () {
 
     rawContractURI = {
       name: "PhantaSpace",
-      description: "Your own space in PhantaSpace",
+      description: "PhantaSpace is an earth scale metaverse.",
       image: "https://phanta.space/favicon.gif",
       external_link: "https://phanta.space",
       seller_fee_basis_points: royalty,

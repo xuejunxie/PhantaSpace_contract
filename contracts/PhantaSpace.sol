@@ -22,7 +22,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Royalt
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
-import "hardhat/console.sol";
 
 contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -40,10 +39,11 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
     mapping (uint256 => address) public highestBidder;
     mapping (uint256 => bool) public availableForAuction;
 
+    event spaceMinted(address to, uint256 geocode);
     event AuctionStarted(uint256 geocode, uint256 startTime);
     event AuctionEnded(uint256 geocode, address highestBidder, uint256 highestBid);
-    event HighestBidIncreased(uint256 geocode,address bidder, uint256 bid);
-    event VendingHappend(uint256 geocodes, address to);
+    event HighestBidIncreased(uint256 geocode, address bidder, uint256 bid);
+    event VendingHappend(address to, uint256 geocodes);
     event SubSpaceMinted(uint256 geocode);
     event SubSpaceAuctionAllowed(uint256 geocode);
     event SubSpaceAuctionStarted(uint256 geocode, uint256 startTime);
@@ -237,6 +237,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
         uint level = (geocode / 10**(2*p+8) * 10 + z) * 10**(2*(p+1) + 8);
         uint newGeocode = level + levelSign + latitude + longitude + p + 1;
         _safeMint(ownerOf(geocode), newGeocode);
+        emit spaceMinted(ownerOf(geocode), geocode);
         emit SubSpaceMinted(newGeocode);
     }
 
@@ -251,7 +252,8 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
                 n = n + 1;
             } else {
                 _safeMint(msg.sender, geocode);
-                emit VendingHappend(geocode, msg.sender);
+                emit VendingHappend(msg.sender, geocode);
+                emit spaceMinted(msg.sender, geocode);
             }
         }
     }
@@ -264,7 +266,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
     }
 
     function genesisAuction(uint256 geocode) public payable {
-        require(msg.value > 0, "Value should be greater than 0");
+        require(msg.value >= vendingPrice, "Auction starting bid should be greater than 0.1 of vending Price");
         checkGeocode(geocode);
         require(geocode % 10 == 1, "precision should be 1 for genesis auction");
         require(!_exists(geocode), "Space is already minted");
@@ -340,6 +342,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
         require(block.timestamp > auctionStartTime[geocode] + auctionDuration, "Space auction is not over");
         require(!_exists(geocode), "Space is already minted");
         _safeMint(highestBidder[geocode], geocode);
+        emit spaceMinted(highestBidder[geocode], geocode);
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
     }
 }

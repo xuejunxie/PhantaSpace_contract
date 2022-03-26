@@ -21,7 +21,7 @@ async function main() {
   const imageURL = "http://phantaspace.com/";
   const animationURL = "https://phanta.space/#/NFT/space/";
   const externalURL = "https://phanta.space/#/space/";
-  const vendingPrice = ethers.utils.parseEther("0.01");
+  const vendingPrice = ethers.utils.parseEther("0.05");
   const auctionDuration = 48 * 3600;
   const royalty = 1000;
 
