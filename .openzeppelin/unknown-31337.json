@@ -12,55 +12,55 @@
       "kind": "uups"
     },
     {
-      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0x8f1faa3856818e9c3327bd0f161704f549ba284d8d2a07ddcf0d21571ae743ec",
-      "kind": "uups"
-    },
-    {
-      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0xda8faf7b68cf088793aa67848e4c87df46b7fc48f28860699b059efe447ffadc",
-      "kind": "uups"
-    },
-    {
-      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xbe9b2b31f000e5a297e09ac9d1be01548d07f8e753ccfef1ca72db16997fb4d1",
-      "kind": "uups"
-    },
-    {
-      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x4fb54054fa076d62a18e861e8af802b03886204aec319ae64fe7a3f410a1e795",
-      "kind": "uups"
-    },
-    {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xabde5c53ca23ad979b134bf91221c2a4c3209de70b0b9323d6e5a0c7a1e973b3",
-      "kind": "uups"
-    },
-    {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xd1852baf6b21f613ab89bcdbac0d547cb5220ca6e32533b4dbe813209583e836",
-      "kind": "uups"
-    },
-    {
       "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
       "txHash": "0xef606454a21ab6b4133d75926540af58d8092936db70d50347ffeb302e213a25",
-      "kind": "uups"
-    },
-    {
-      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0xda6e9c72edc5f8bf3ddeaa43cd714598bba1b39fb8a4e49835785c21b8fff1d7",
       "kind": "uups"
     },
     {
       "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
       "txHash": "0x569718b5ca0cb2f93ca74dc497e01916c98d7858a6f0539e1a5319e37eb77272",
       "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0x8e330d7553157bd0eb96b0dca3bd4a102b279cbfd5cc06e4369e762c29c29265",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0x7decbc2d50e8a95fe3296d38d0814f66e914113acb359a69c325289e4c8b262c",
+      "kind": "uups"
+    },
+    {
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "txHash": "0xdd4a36dbd4af0d7ca584d719629a6057e98d22d194d2931d33d2346606f6e235",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0xcd1973436b83abf5cb9a2760ba9af2ff33f49b6f6b546b75715a72716562b3b3",
+      "kind": "uups"
+    },
+    {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0xd04a9209d99d975de5d006c36dcb1b681ecd731834b9bc06a1dfbdd536520dd1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x3b26f76b5c4b6aae68c70642abb2ff741187729b20249a7793c5bd37e24ff1a4",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0x8c3ab1887e1404c549372a93e28da2103002371954b6d4b6847a82dde96d70ef",
+      "kind": "uups"
     }
   ],
   "impls": {
-    "7c18a367ece1d48dc2e7098589dbbb4d05356f5ad810dfc52df95f5dce68be5f": {
+    "5734bb82b80b734e2a973b28be396a1a2885455efaaa36d2f4d75956ef279dfb": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x46d2bf221d45092cc16652f12419506ca56109ee0794c9e36d1ce40afbb5a85c",
+      "txHash": "0xc861957d7031c8c4e5c13dc87cb47487ab249372eae03828586dde4c406010a5",
       "layout": {
         "storage": [
           {
@@ -99,7 +99,7 @@
             "label": "_defaultRoyaltyInfo",
             "offset": 0,
             "slot": "101",
-            "type": "t_struct(RoyaltyInfo)2536_storage",
+            "type": "t_struct(RoyaltyInfo)2388_storage",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:36"
           },
@@ -107,7 +107,7 @@
             "label": "_tokenRoyaltyInfo",
             "offset": 0,
             "slot": "102",
-            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)2536_storage)",
+            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)2388_storage)",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:37"
           },
@@ -216,25 +216,9 @@
             "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol:175"
           },
           {
-            "label": "_tokenURIs",
-            "offset": 0,
-            "slot": "251",
-            "type": "t_mapping(t_uint256,t_string_storage)",
-            "contract": "ERC721URIStorageUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol:21"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "252",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "ERC721URIStorageUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol:79"
-          },
-          {
             "label": "_paused",
             "offset": 0,
-            "slot": "301",
+            "slot": "251",
             "type": "t_bool",
             "contract": "PausableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
@@ -242,7 +226,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "302",
+            "slot": "252",
             "type": "t_array(t_uint256)49_storage",
             "contract": "PausableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:102"
@@ -250,7 +234,7 @@
           {
             "label": "_owner",
             "offset": 0,
-            "slot": "351",
+            "slot": "301",
             "type": "t_address",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
@@ -258,7 +242,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "352",
+            "slot": "302",
             "type": "t_array(t_uint256)49_storage",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:87"
@@ -266,7 +250,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "401",
+            "slot": "351",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ERC1967UpgradeUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
@@ -274,7 +258,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "451",
+            "slot": "401",
             "type": "t_array(t_uint256)50_storage",
             "contract": "UUPSUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
@@ -282,106 +266,90 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "501",
+            "slot": "451",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ERC721RoyaltyUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol:50"
           },
           {
-            "label": "imageURL",
+            "label": "baseURI",
             "offset": 0,
-            "slot": "551",
+            "slot": "501",
+            "type": "t_string_storage",
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:27"
+          },
+          {
+            "label": "contractURI",
+            "offset": 0,
+            "slot": "502",
             "type": "t_string_storage",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:28"
           },
           {
-            "label": "animationURL",
+            "label": "vendingPrice",
             "offset": 0,
-            "slot": "552",
-            "type": "t_string_storage",
-            "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:29"
-          },
-          {
-            "label": "externalURL",
-            "offset": 0,
-            "slot": "553",
-            "type": "t_string_storage",
+            "slot": "503",
+            "type": "t_uint256",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:30"
           },
           {
-            "label": "vendingPrice",
+            "label": "auctionDuration",
             "offset": 0,
-            "slot": "554",
+            "slot": "504",
             "type": "t_uint256",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:31"
           },
           {
-            "label": "auctionDuration",
+            "label": "royaltyFeesInBips",
             "offset": 0,
-            "slot": "555",
+            "slot": "505",
             "type": "t_uint256",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:32"
           },
           {
-            "label": "royaltyFeesInBips",
+            "label": "auctionStartTime",
             "offset": 0,
-            "slot": "556",
-            "type": "t_uint256",
-            "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:33"
-          },
-          {
-            "label": "contractURI",
-            "offset": 0,
-            "slot": "557",
-            "type": "t_string_storage",
+            "slot": "506",
+            "type": "t_mapping(t_uint256,t_uint256)",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:34"
           },
           {
-            "label": "auctionStartTime",
+            "label": "pendingReturns",
             "offset": 0,
-            "slot": "558",
+            "slot": "507",
+            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "contract": "PhantaSpace",
+            "src": "contracts/PhantaSpace.sol:35"
+          },
+          {
+            "label": "highestBid",
+            "offset": 0,
+            "slot": "508",
             "type": "t_mapping(t_uint256,t_uint256)",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:36"
           },
           {
-            "label": "pendingReturns",
+            "label": "highestBidder",
             "offset": 0,
-            "slot": "559",
-            "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
+            "slot": "509",
+            "type": "t_mapping(t_uint256,t_address)",
             "contract": "PhantaSpace",
             "src": "contracts/PhantaSpace.sol:37"
           },
           {
-            "label": "highestBid",
-            "offset": 0,
-            "slot": "560",
-            "type": "t_mapping(t_uint256,t_uint256)",
-            "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:38"
-          },
-          {
-            "label": "highestBidder",
-            "offset": 0,
-            "slot": "561",
-            "type": "t_mapping(t_uint256,t_address)",
-            "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:39"
-          },
-          {
             "label": "availableForAuction",
             "offset": 0,
-            "slot": "562",
+            "slot": "510",
             "type": "t_mapping(t_uint256,t_bool)",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:40"
+            "src": "contracts/PhantaSpace.sol:38"
           }
         ],
         "types": {
@@ -445,11 +413,7 @@
             "label": "mapping(uint256 => mapping(address => uint256))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_string_storage)": {
-            "label": "mapping(uint256 => string)",
-            "numberOfBytes": "32"
-          },
-          "t_mapping(t_uint256,t_struct(RoyaltyInfo)2536_storage)": {
+          "t_mapping(t_uint256,t_struct(RoyaltyInfo)2388_storage)": {
             "label": "mapping(uint256 => struct ERC2981Upgradeable.RoyaltyInfo)",
             "numberOfBytes": "32"
           },
@@ -461,7 +425,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(RoyaltyInfo)2536_storage": {
+          "t_struct(RoyaltyInfo)2388_storage": {
             "label": "struct ERC2981Upgradeable.RoyaltyInfo",
             "members": [
               {

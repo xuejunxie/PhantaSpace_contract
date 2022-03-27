@@ -13,7 +13,6 @@ pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -23,15 +22,14 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
 
-contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
+contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    string public imageURL;
-    string public animationURL;
-    string public externalURL;
+    string public baseURI;
+    string public contractURI;
+
     uint public vendingPrice;
     uint public auctionDuration;
     uint public royaltyFeesInBips;
-    string public contractURI;
 
     mapping (uint256 => uint) public auctionStartTime;
     mapping (uint256 => mapping (address => uint)) public pendingReturns;
@@ -49,18 +47,15 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
     event SubSpaceAuctionStarted(uint256 geocode, uint256 startTime);
 
 
-    function initialize( string memory _imageURL, string memory _animationURL, string memory _externalURL, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips,  string memory _contractURI) initializer public {
+    function initialize( string memory _metadataURL, string memory _contractURI, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) initializer public {
         __ERC721_init("PhantaSpace", unicode"🌐");
         __ERC721Enumerable_init();
-        __ERC721URIStorage_init();
         __Pausable_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
         __ERC721Royalty_init();
 
-        imageURL = _imageURL;
-        animationURL = _animationURL;
-        externalURL = _externalURL;
+        baseURI = _metadataURL;
         vendingPrice = _vendingPrice;
         auctionDuration = _auctionDuration;
         royaltyFeesInBips = _royaltyFeesInBips;
@@ -69,19 +64,16 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
 
     }
 
-
-
-    function setImageURL(string memory _imageURL) public onlyOwner {
-        imageURL = _imageURL;
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
     }
 
-    function setAnimationURL (string memory _animationURL) public onlyOwner {
-        animationURL = _animationURL;
+    function setBaseURI(string memory _metadataURL) public onlyOwner{
+        baseURI = _metadataURL;
     }
 
- 
-    function setExternalURL (string memory _externalURL) public onlyOwner {
-        externalURL = _externalURL;
+    function setContractURI (string memory _contractURI) public onlyOwner {
+        contractURI = _contractURI;
     }
 
     function setVendingPrice (uint _vendingPrice) public onlyOwner {
@@ -97,8 +89,8 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
         _setDefaultRoyalty(_receiver, _royaltyFeesInBips);
     }
 
-    function setContractURI (string memory _contractURI) public onlyOwner {
-        contractURI = _contractURI;
+    function exists(uint256 geocode) public view returns (bool) {
+        return _exists(geocode);
     }
 
 
@@ -135,18 +127,9 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
 
     function _burn(uint256 tokenId)
         internal
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable, ERC721RoyaltyUpgradeable)
+        override(ERC721Upgradeable, ERC721RoyaltyUpgradeable)
     {
         super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
-        returns (string memory)
-    {
-        return formatTokenURI(tokenId);
     }
 
     function supportsInterface(bytes4 interfaceId)
@@ -183,28 +166,6 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, ERC721EnumerableUpgrad
         }
 
     }
-
-
-    function formatTokenURI(uint256 geocode) public view returns (string memory) {
-            return string(
-                    abi.encodePacked(
-                        "data:application/json;base64,",
-                        Base64.encode(
-                            bytes(
-                                abi.encodePacked(
-                                    '{"name":"PhantaSpace ', Strings.toString(geocode), '",',
-                                    '"description":"A space in PhantaSpace!",',
-                                    '"attributes":"",',
-                                    '"image":"', imageURL, Strings.toString(geocode),'.jpg",',
-                                    '"animation_url":"', animationURL, Strings.toString(geocode),'",',
-                                    '"external_url":"', externalURL, Strings.toString(geocode),'"',
-                                    '}'
-                                )
-                            )
-                        )
-                    )
-                );
-        }
 
     function address2String(address x) internal pure returns (string memory) {
         bytes memory s = new bytes(40);

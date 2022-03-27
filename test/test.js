@@ -27,27 +27,15 @@ describe("PhantaSpace", function () {
     phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
-    imageURL = "http://phantaspace.com/thumbnails/";
-    animationURL = "https://phanta.space/#/NFT/space/";
-    externalURL = "https://phanta.space/#/space/";
+    metadataURL = "https://phantaspace.com/metadata/";
+    contractURI = "https://phantaspace.com/contract/";
     vendingPrice = ethers.utils.parseEther("0.01");
     auctionDuration = 24 * 3600;
     royalty = 1000;
 
-    rawContractURI = {
-      name: "PhantaSpace",
-      description: "PhantaSpace is an earth scale metaverse.",
-      image: "https://phanta.space/favicon.gif",
-      external_link: "https://phanta.space",
-      seller_fee_basis_points: royalty,
-      fee_recipient: owner.address,
-    };
-
-    encodedContractURI = "data:application/json;base64," + btoa(JSON.stringify(rawContractURI));
-
     deployed_contract = await upgrades.deployProxy(
       phantaSpace_contract,
-      [imageURL, animationURL, externalURL, vendingPrice, auctionDuration, royalty, encodedContractURI],
+      [metadataURL, contractURI, vendingPrice, auctionDuration, royalty],
       { kind: "uups" }
     );
 
@@ -62,24 +50,7 @@ describe("PhantaSpace", function () {
     it("should return contractURI", async function () {
       const contractURI = await deployed_contract.contractURI();
       console.log("contractURI :", contractURI);
-      expect(contractURI).to.equal(encodedContractURI);
-    });
-
-    it("should update contractURI", async function () {
-      rawContractURI = {
-        name: "PhantaSpace",
-        description: "Your own space in PhantaSpace",
-        image: "https://phanta.space/favicon.png",
-        external_link: "https://phanta.space",
-        seller_fee_basis_points: royalty,
-        fee_recipient: owner.address,
-      };
-
-      encodedContractURI = "data:application/json;base64," + btoa(JSON.stringify(rawContractURI));
-
-      await deployed_contract.setContractURI(encodedContractURI);
-
-      expect(await deployed_contract.contractURI()).to.equal(encodedContractURI);
+      expect(contractURI).to.equal("https://phantaspace.com/contract/");
     });
   });
 
@@ -118,21 +89,20 @@ describe("PhantaSpace", function () {
       console.log("NFT owner :", NFTowner);
       expect(NFTowner).to.equal(addr1.address);
     });
-
-    it("should return tokenURI", async function () {
-      let geocode = 3130710591;
-      const tokenURI = await deployed_contract.tokenURI(geocode);
-      console.log("tokenURI :", tokenURI);
-    });
   });
 
   describe("safeMint", function () {
+    const geocode = 3130710591;
+
     it("should mint a space token", async function () {
-      const geocode = 3130710591;
       await deployed_contract.safeMint(addr1.address, geocode);
       const NFTowner = await deployed_contract.ownerOf(geocode);
       console.log("NFT owner :", NFTowner);
+      const exist = await deployed_contract.exists(geocode);
+      console.log(exist);
       expect(NFTowner).to.equal(addr1.address);
+      const tokenURI = await deployed_contract.tokenURI(geocode);
+      console.log("tokenURI :", tokenURI);
     });
   });
 });
