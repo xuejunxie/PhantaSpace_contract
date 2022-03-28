@@ -21,7 +21,7 @@ async function main() {
 
   const metadataURL = "http://phantaspace.com/metadata/";
   const contractURI = "http://phantaspace.com/contract/";
-  const vendingPrice = ethers.utils.parseEther("0.1");
+  const vendingPrice = ethers.utils.parseEther("0.00001");
   const auctionDuration = 48 * 3600;
   const royalty = 1000;
 
