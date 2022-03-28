@@ -19,8 +19,8 @@ async function main() {
   [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
   console.log("owner :", owner.address);
 
-  const metadataURL = "https://phantaspace.com/metadata/";
-  const contractURI = "https://phantaspace.com/contract/";
+  const metadataURL = "http://phantaspace.com/metadata/";
+  const contractURI = "http://phantaspace.com/contract/";
   const vendingPrice = ethers.utils.parseEther("0.1");
   const auctionDuration = 48 * 3600;
   const royalty = 1000;
@@ -32,6 +32,12 @@ async function main() {
   );
 
   console.log("deployed_contract :", deployed_contract.address);
+
+  const testMint = 3099011651;
+
+  const mint_result = await deployed_contract.safeMint(owner.address, testMint);
+
+  console.log("https://testnets.opensea.io/assets/" + deployed_contract.address + "/" + testMint);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
