@@ -22,45 +22,50 @@
       "kind": "uups"
     },
     {
-      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0x8e330d7553157bd0eb96b0dca3bd4a102b279cbfd5cc06e4369e762c29c29265",
-      "kind": "uups"
-    },
-    {
       "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
       "txHash": "0x7decbc2d50e8a95fe3296d38d0814f66e914113acb359a69c325289e4c8b262c",
       "kind": "uups"
     },
     {
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "txHash": "0xb508971f45be40699ea72f305c6fa4a3a13c2421afad3cca5004dc1fc1fc5432",
+      "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0xe54ba638bbe343223cedaa08b3a79cd5a7594622899939c50da9c7202cee34b2",
+      "kind": "uups"
+    },
+    {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xdd4a36dbd4af0d7ca584d719629a6057e98d22d194d2931d33d2346606f6e235",
+      "txHash": "0x491389c847cd1cbf712b747b0a60195e73127ef59c8a690e1c5facfd9b65bc28",
       "kind": "uups"
     },
     {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xcd1973436b83abf5cb9a2760ba9af2ff33f49b6f6b546b75715a72716562b3b3",
+      "txHash": "0xa9bbb6e4b23c0a1ea870dbc7e48c9ff827c831e4650c48e6b872ffe9adaa2e4b",
       "kind": "uups"
     },
     {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xd04a9209d99d975de5d006c36dcb1b681ecd731834b9bc06a1dfbdd536520dd1",
+      "txHash": "0xb245562dbca92f0ff93cddb3f74c20a3e3597f84d795c2b5a430a3ee76b61708",
       "kind": "uups"
     },
     {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x3b26f76b5c4b6aae68c70642abb2ff741187729b20249a7793c5bd37e24ff1a4",
+      "txHash": "0x7d0eed1883051ed4aa77dd7547a3ce97a8d90e0ce4dda14cc3419f192913ad41",
       "kind": "uups"
     },
     {
       "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0x8c3ab1887e1404c549372a93e28da2103002371954b6d4b6847a82dde96d70ef",
+      "txHash": "0x6bdd7daef7626029c3c875af0bd1bb4ed5ce2944ac1d13a71a2d5521ce03c904",
       "kind": "uups"
     }
   ],
   "impls": {
-    "5734bb82b80b734e2a973b28be396a1a2885455efaaa36d2f4d75956ef279dfb": {
+    "2681788b9b86179e22d205100db6b9a8f8d6ba57aa74f85f6bad009a52d103ec": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0xc861957d7031c8c4e5c13dc87cb47487ab249372eae03828586dde4c406010a5",
+      "txHash": "0x79b3150c1180a712a6d9d364b9e938419afe480ecade672f748a305e327db9cc",
       "layout": {
         "storage": [
           {
@@ -344,7 +349,7 @@
             "src": "contracts/PhantaSpace.sol:37"
           },
           {
-            "label": "availableForAuction",
+            "label": "subspaceAvailableForAuction",
             "offset": 0,
             "slot": "510",
             "type": "t_mapping(t_uint256,t_bool)",

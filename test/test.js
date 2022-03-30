@@ -1,5 +1,6 @@
 const { expect } = require("chai");
-const { ethers, upgrades } = require("hardhat");
+const { ethers, upgrades, network, waffle } = require("hardhat");
+const { networks } = require("../hardhat.config");
 
 //  // short code to get private key from mnemonic
 // let mnemonic = "";
@@ -57,7 +58,7 @@ describe("PhantaSpace", function () {
   describe("vending", function () {
     it("should vend space tokens", async function () {
       await deployed_contract.vending({
-        value: ethers.utils.parseEther("0.1"),
+        value: ethers.utils.parseEther("0.01"),
       });
     });
   });
@@ -78,16 +79,25 @@ describe("PhantaSpace", function () {
         value: ethers.utils.parseEther("0.02"),
       });
 
-      await deployed_contract.withdraw(geocode);
-
       await network.provider.send("evm_increaseTime", [14 * 3600]);
 
-      await deployed_contract.auctionEnd(geocode);
+      await deployed_contract.genesisAuctionEnd(geocode);
+
+      await deployed_contract.withdraw(geocode);
 
       console.log(addr1.address);
+      const balance = await deployed_contract.balanceOf(addr1.address);
+      console.log("balance :", balance);
+
+      const contractBalance = await waffle.provider.getBalance(deployed_contract.address);
+
+      console.log("contractBalance :", contractBalance);
       const NFTowner = await deployed_contract.ownerOf(geocode);
       console.log("NFT owner :", NFTowner);
       expect(NFTowner).to.equal(addr1.address);
+
+      //put subspace to auction
+      await deployed_contract.connect(addr1).putSubspaceToAuciton(geocode);
     });
   });
 

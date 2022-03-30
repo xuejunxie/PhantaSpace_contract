@@ -12,7 +12,7 @@ async function main() {
   console.log(owner);
 
   const mint_result = await deployed_contract.vending({
-    value: ethers.utils.parseEther("0.0001"),
+    value: ethers.utils.parseEther("0.00002"),
   });
 
   console.log(mint_result);
