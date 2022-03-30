@@ -30,7 +30,7 @@ describe("PhantaSpace", function () {
 
     metadataURL = "https://phantaspace.com/metadata/";
     contractURI = "https://phantaspace.com/contract/";
-    vendingPrice = ethers.utils.parseEther("0.01");
+    vendingPrice = ethers.utils.parseEther("0.04");
     auctionDuration = 24 * 3600;
     royalty = 1000;
 
@@ -58,8 +58,14 @@ describe("PhantaSpace", function () {
   describe("vending", function () {
     it("should vend space tokens", async function () {
       await deployed_contract.vending({
-        value: ethers.utils.parseEther("0.01"),
+        value: ethers.utils.parseEther("1"),
       });
+
+      // const NFT_numbers = await deployed_contract.balanceOf(owner.address);
+      // for (let i = 0; i < NFT_numbers; i++) {
+      //   const NFT = await deployed_contract.tokenOfOwnerByIndex(owner.address, i);
+      //   console.log("NFT :", NFT);
+      // }
     });
   });
 
@@ -67,7 +73,7 @@ describe("PhantaSpace", function () {
     let geocode = 3130710591;
     it("should start a genesis auction", async function () {
       await deployed_contract.genesisAuction(geocode, {
-        value: ethers.utils.parseEther("0.01"),
+        value: ethers.utils.parseEther("1"),
       });
 
       const actionTime = await deployed_contract.auctionStartTime(geocode);
@@ -76,7 +82,7 @@ describe("PhantaSpace", function () {
       await network.provider.send("evm_increaseTime", [14 * 3600]);
 
       await deployed_contract.connect(addr1).bid(geocode, {
-        value: ethers.utils.parseEther("0.02"),
+        value: ethers.utils.parseEther("2"),
       });
 
       await network.provider.send("evm_increaseTime", [14 * 3600]);
