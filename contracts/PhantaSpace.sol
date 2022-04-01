@@ -35,11 +35,11 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     mapping (uint256 => address) public highestBidder;
     mapping (uint256 => bool) public subspaceAvailableForAuction;
 
-    event spaceMinted(address to, uint256 geocode);
+    event SpaceMinted(address to, uint256 geocode);
     event AuctionStarted(uint256 geocode, uint256 auctionEndTime);
     event AuctionExtended(uint256 geocode, uint256 newAuctionEndTime);
     event AuctionEnded(uint256 geocode, address highestBidder, uint256 highestBid);
-    event HighestBidIncreased(uint256 geocode, address bidder, uint256 bid);
+    event HighestBidIncreased(uint256 geocode, address highestBidder, uint256 highestBid);
     event VendingHappend(address to, uint256 geocodes);
     event SubSpaceMinted(uint256 geocode);
     event SubSpaceAuctionAllowed(uint256 geocode);
@@ -196,7 +196,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         uint level = (geocode / 10**(2*p+8) * 10 + z) * 10**(2*(p+1) + 8);
         uint newGeocode = level + levelSign + latitude + longitude + p + 1;
         _safeMint(ownerOf(geocode), newGeocode);
-        emit spaceMinted(ownerOf(geocode), geocode);
+        emit SpaceMinted(ownerOf(geocode), newGeocode);
         emit SubSpaceMinted(newGeocode);
     }
 
@@ -212,7 +212,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
             } else {
                 _safeMint(msg.sender, geocode);
                 emit VendingHappend(msg.sender, geocode);
-                emit spaceMinted(msg.sender, geocode);
+                emit SpaceMinted(msg.sender, geocode);
             }
         }
     }
@@ -233,7 +233,9 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         auctionEndTime[geocode] = block.timestamp + auctionDuration;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
-        emit AuctionStarted(geocode, block.timestamp);
+        emit AuctionStarted(geocode, auctionEndTime[geocode]);
+        emit HighestBidIncreased(geocode, msg.sender, msg.value);
+
 
     }
 
@@ -253,7 +255,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         auctionEndTime[geocode] = block.timestamp + auctionDuration;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
-        emit SubSpaceAuctionStarted(geocode, block.timestamp);
+        emit SubSpaceAuctionStarted(geocode, auctionEndTime[geocode]);
     }
 
     function parent(uint256 geocode) internal pure returns (uint256 parentGeocode) {
@@ -319,7 +321,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         require(block.timestamp > auctionEndTime[geocode], "Space auction is not over");
         require(!_exists(geocode), "Space is already minted");
         _safeMint(highestBidder[geocode], geocode);
-        emit spaceMinted(highestBidder[geocode], geocode);
+        emit SpaceMinted(highestBidder[geocode], geocode);
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
     }
 
@@ -331,7 +333,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         _safeMint(highestBidder[geocode], geocode);
         uint amount = highestBid[geocode] / 10000 * (10000 - royaltyFeesInBips);  //  royaltyFeesInBips / 10000 % of the bid is the royalty fees
         payable(ownerOf(parentGeocode)).transfer(amount);
-        emit spaceMinted(highestBidder[geocode], geocode);
+        emit SpaceMinted(highestBidder[geocode], geocode);
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
 
 
