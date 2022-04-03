@@ -33,9 +33,9 @@ async function main() {
 
   console.log("deployed_contract :", deployed_contract.address);
 
-  const testMint = 3099011651;
+  // const testMint = 3099011651;
 
-  const mint_result = await deployed_contract.safeMint(owner.address, testMint);
+  // const mint_result = await deployed_contract.safeMint(owner.address, testMint);
 
   console.log("https://testnets.opensea.io/assets/" + deployed_contract.address + "/" + testMint);
 }

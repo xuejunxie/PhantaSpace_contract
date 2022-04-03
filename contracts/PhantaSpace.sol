@@ -283,20 +283,21 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         newBid = pendingReturns[geocode][msg.sender] + msg.value;
         }
 
-        if(newBid >  highestBid[geocode] ){
-            pendingReturns[geocode][highestBidder[geocode]] = highestBid[geocode];
-            highestBid[geocode] = newBid;
-            highestBidder[geocode] = msg.sender;
-            pendingReturns[geocode][msg.sender] = 0;
-            if(block.timestamp > (auctionEndTime[geocode] - 10 * 60) ){
-                auctionEndTime[geocode] += 10 * 60;  //  Any bids made in the last 10 minutes of an auction will extend each auction by 10 more minutes.
-                emit AuctionExtended(geocode, auctionEndTime[geocode]);
-            }
-        } else {
-            revert ("You can't bid less than the current highest bid");
+        require(newBid > highestBid[geocode], "Bid should be greater than highestBid");
+        
+        pendingReturns[geocode][highestBidder[geocode]] = highestBid[geocode];
+        pendingReturns[geocode][msg.sender] = 0;
+
+        highestBid[geocode] = newBid;
+        highestBidder[geocode] = msg.sender;
+
+        emit HighestBidIncreased(geocode, msg.sender, newBid);
+
+        if(block.timestamp > (auctionEndTime[geocode] - 10 * 60) ){
+            auctionEndTime[geocode] += 10 * 60;  //  Any bids made in the last 10 minutes of an auction will extend each auction by 10 more minutes.
+            emit AuctionExtended(geocode, auctionEndTime[geocode]);
         }
 
-        emit HighestBidIncreased(geocode, msg.sender, msg.value);
 
     }
 

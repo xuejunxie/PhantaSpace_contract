@@ -58,7 +58,7 @@ describe("PhantaSpace", function () {
   describe("vending", function () {
     it("should vend space tokens", async function () {
       await deployed_contract.vending({
-        value: ethers.utils.parseEther("0.5"),
+        value: ethers.utils.parseEther("0.01"),
       });
 
       // const NFT_numbers = await deployed_contract.balanceOf(owner.address);
@@ -76,13 +76,19 @@ describe("PhantaSpace", function () {
         value: ethers.utils.parseEther("1"),
       });
 
-      const actionEndTime1 = await deployed_contract.auctionEndTime(geocode);
-      console.log("actionEndTime :", actionEndTime1);
+      const auctionEndTime1 = await deployed_contract.auctionEndTime(geocode);
+      console.log("auctionEndTime :", auctionEndTime1);
 
       await network.provider.send("evm_increaseTime", [14 * 3600]);
 
       await deployed_contract.connect(addr1).bid(geocode, {
         value: ethers.utils.parseEther("2"),
+      });
+
+      await network.provider.send("evm_increaseTime", [10 * 3600 - 60]);
+
+      await deployed_contract.connect(addr2).bid(geocode, {
+        value: ethers.utils.parseEther("3"),
       });
 
       await network.provider.send("evm_increaseTime", [25 * 3600]);
@@ -93,12 +99,13 @@ describe("PhantaSpace", function () {
 
       console.log("blockTimestamp :", blockTimestamp);
 
-      const actionEndTime2 = await deployed_contract.auctionEndTime(geocode);
-      console.log("actionEndTime :", actionEndTime2);
+      const auctionEndTime2 = await deployed_contract.auctionEndTime(geocode);
+      console.log("auctionEndTime :", auctionEndTime2);
+      expect(parseInt(auctionEndTime2)).to.equal(parseInt(auctionEndTime1) + 10 * 60);
 
       await deployed_contract.genesisAuctionEnd(geocode);
 
-      await deployed_contract.withdraw(geocode);
+      await deployed_contract.connect(addr2).withdraw(geocode);
 
       console.log(addr1.address);
       const balance = await deployed_contract.balanceOf(addr1.address);
@@ -109,10 +116,10 @@ describe("PhantaSpace", function () {
       console.log("contractBalance :", contractBalance);
       const NFTowner = await deployed_contract.ownerOf(geocode);
       console.log("NFT owner :", NFTowner);
-      expect(NFTowner).to.equal(addr1.address);
+      expect(NFTowner).to.equal(addr2.address);
 
       //put subspace to auction
-      await deployed_contract.connect(addr1).putSubspaceToAuciton(geocode);
+      await deployed_contract.connect(addr2).putSubspaceToAuciton(geocode);
     });
   });
 
