@@ -318,12 +318,13 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         } else {
         
         _safeMint(highestBidder[geocode], geocode);
-
+        
         uint256 parentGeocode = parent(geocode);
         uint amount = highestBid[geocode] / 10000 * (10000 - royaltyFeesInBips);  //  royaltyFeesInBips / 10000 % of the bid is the royalty fees
         payable(ownerOf(parentGeocode)).transfer(amount);
+
         }
-        
+
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
 
     }
