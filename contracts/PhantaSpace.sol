@@ -36,14 +36,11 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     mapping (uint256 => bool) public subspaceAvailableForAuction;
 
     event SpaceMinted(address to, uint256 geocode);
-    event AuctionStarted(uint256 geocode, uint256 auctionEndTime);
+    event AuctionStarted(uint256 geocode, uint256 auctionEndTime, uint256 highestBid, address highestBidder);
     event AuctionExtended(uint256 geocode, uint256 newAuctionEndTime);
     event AuctionEnded(uint256 geocode, address highestBidder, uint256 highestBid);
     event HighestBidIncreased(uint256 geocode, address highestBidder, uint256 highestBid);
-    event VendingHappend(address to, uint256 geocodes);
-    event SubSpaceMinted(uint256 geocode);
     event SubSpaceAuctionAllowed(uint256 geocode);
-    event SubSpaceAuctionStarted(uint256 geocode, uint256 startTime);
 
 
     function initialize( string memory _metadataURL, string memory _contractURI, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) initializer public {
@@ -198,7 +195,6 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         uint newGeocode = level + levelSign + latitude + longitude + p + 1;
         _safeMint(ownerOf(geocode), newGeocode);
         emit SpaceMinted(ownerOf(geocode), newGeocode);
-        emit SubSpaceMinted(newGeocode);
     }
 
     // random function
@@ -212,7 +208,6 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
                 n = n + 1;
             } else {
                 _safeMint(msg.sender, geocode);
-                emit VendingHappend(msg.sender, geocode);
                 emit SpaceMinted(msg.sender, geocode);
             }
         }
@@ -226,18 +221,23 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     }
 
     function genesisAuction(uint256 geocode) public payable {
-        require(msg.value >= vendingPrice, "Auction starting bid should be greater than vending Price");
         checkGeocode(geocode);
-        require(geocode % 10 == 1, "precision should be 1 for genesis auction");
+        require(msg.value > 0, "Value should be greater than 0");
         require(!_exists(geocode), "Space is already minted");
         require(auctionEndTime[geocode]==0, "Space is already in auction");
         auctionEndTime[geocode] = block.timestamp + auctionDuration;
+
+        if(geocode % 10 == 1){
+            require(msg.value >= vendingPrice, "Auction starting bid should be greater than vending Price");
+            
+        } else {
+            require(subspaceAvailableForAuction[parent(geocode)], "Space is not available for auction");
+        }
+
+        auctionEndTime[geocode] = block.timestamp + auctionDuration;
         highestBid[geocode] = msg.value;
         highestBidder[geocode] = msg.sender;
-        emit AuctionStarted(geocode, auctionEndTime[geocode]);
-        emit HighestBidIncreased(geocode, msg.sender, msg.value);
-
-
+        emit AuctionStarted(geocode, auctionEndTime[geocode], highestBid[geocode], highestBidder[geocode]);
     }
 
     function putSubspaceToAuciton(uint256 geocode) public {
@@ -247,17 +247,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         emit SubSpaceAuctionAllowed(geocode);
     }
 
-    function subspaceAuction(uint256 geocode) public payable {
-        require(msg.value > 0, "Value should be greater than 0");
-        checkGeocode(geocode);
-        require (!_exists(geocode), "minted subspace dosen't need on chain auction"); 
-        require(subspaceAvailableForAuction[parent(geocode)], "Space is not available for auction");
-        require(auctionEndTime[geocode]==0, "Space is already in auction");
-        auctionEndTime[geocode] = block.timestamp + auctionDuration;
-        highestBid[geocode] = msg.value;
-        highestBidder[geocode] = msg.sender;
-        emit SubSpaceAuctionStarted(geocode, auctionEndTime[geocode]);
-    }
+
 
     function parent(uint256 geocode) internal pure returns (uint256 parentGeocode) {
         uint p = geocode % 10;
@@ -318,27 +308,27 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
     function genesisAuctionEnd(uint256 geocode) public {
         checkGeocode(geocode);
-        require(geocode % 10 == 1, "precision should be 1 for genesis auction");
         require(block.timestamp > auctionEndTime[geocode], "Space auction is not over");
         require(!_exists(geocode), "Space is already minted");
-        _safeMint(highestBidder[geocode], geocode);
-        emit SpaceMinted(highestBidder[geocode], geocode);
-        emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
-    }
 
-    function subspaceAuctionEnd(uint256 geocode) public {
-        checkGeocode(geocode);
-        uint256 parentGeocode = parent(geocode);
-        require(block.timestamp > auctionEndTime[geocode], "Space auction is not over");
-        require(!_exists(geocode), "Space is already minted");
+        if(geocode % 10 == 1){
+
         _safeMint(highestBidder[geocode], geocode);
+       
+        } else {
+        
+        _safeMint(highestBidder[geocode], geocode);
+
+        uint256 parentGeocode = parent(geocode);
         uint amount = highestBid[geocode] / 10000 * (10000 - royaltyFeesInBips);  //  royaltyFeesInBips / 10000 % of the bid is the royalty fees
         payable(ownerOf(parentGeocode)).transfer(amount);
-        emit SpaceMinted(highestBidder[geocode], geocode);
+        }
+        
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
 
-
     }
+
+
 
     function ownerWithdraw(uint amount) public onlyOwner returns(bool) {
         require(amount <= address(this).balance);
