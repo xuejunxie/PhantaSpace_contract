@@ -62,6 +62,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
     }
 
+
     function _baseURI() internal view override returns (string memory) {
         return baseURI;
     }
@@ -225,7 +226,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     }
 
     function genesisAuction(uint256 geocode) public payable {
-        require(msg.value >= vendingPrice, "Auction starting bid should be greater than 0.1 of vending Price");
+        require(msg.value >= vendingPrice, "Auction starting bid should be greater than vending Price");
         checkGeocode(geocode);
         require(geocode % 10 == 1, "precision should be 1 for genesis auction");
         require(!_exists(geocode), "Space is already minted");
@@ -305,14 +306,13 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         require(block.timestamp > auctionEndTime[geocode], "Please wait for space auction to end to withdraw");
         checkGeocode(geocode);
         uint amount = pendingReturns[geocode][msg.sender];
-        if (amount > 0){
-            pendingReturns[geocode][msg.sender] = 0;
+        require(amount > 0, "You have no pending returns");
+        pendingReturns[geocode][msg.sender] = 0;
 
-            if(!payable(msg.sender).send(amount)){
-                pendingReturns[geocode][msg.sender] = amount;
-                return false;
-            }
-        }        
+        if(!payable(msg.sender).send(amount)){
+            pendingReturns[geocode][msg.sender] = amount;
+            return false;
+        }
         return true;
     }
 

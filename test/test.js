@@ -30,7 +30,7 @@ describe("PhantaSpace", function () {
 
     metadataURL = "https://phantaspace.com/metadata/";
     contractURI = "https://phantaspace.com/contract/";
-    vendingPrice = ethers.utils.parseEther("0.01");
+    vendingPrice = ethers.utils.parseEther("0.001");
     auctionDuration = 24 * 3600;
     royalty = 1000;
 
@@ -58,7 +58,7 @@ describe("PhantaSpace", function () {
   describe("vending", function () {
     it("should vend space tokens", async function () {
       await deployed_contract.vending({
-        value: ethers.utils.parseEther("0.01"),
+        value: ethers.utils.parseEther("0.001"),
       });
 
       // const NFT_numbers = await deployed_contract.balanceOf(owner.address);
@@ -73,7 +73,7 @@ describe("PhantaSpace", function () {
     let geocode = 3130710591;
     it("should start a genesis auction", async function () {
       await deployed_contract.genesisAuction(geocode, {
-        value: ethers.utils.parseEther("1"),
+        value: ethers.utils.parseEther("0.1"),
       });
 
       const auctionEndTime1 = await deployed_contract.auctionEndTime(geocode);
@@ -81,14 +81,17 @@ describe("PhantaSpace", function () {
 
       await network.provider.send("evm_increaseTime", [14 * 3600]);
 
+      const balance0 = await waffle.provider.getBalance(addr1.address);
+      console.log("balance :", balance0);
+
       await deployed_contract.connect(addr1).bid(geocode, {
-        value: ethers.utils.parseEther("2"),
+        value: ethers.utils.parseEther("0.2"),
       });
 
       await network.provider.send("evm_increaseTime", [10 * 3600 - 60]);
 
       await deployed_contract.connect(addr2).bid(geocode, {
-        value: ethers.utils.parseEther("3"),
+        value: ethers.utils.parseEther("0.3"),
       });
 
       await network.provider.send("evm_increaseTime", [25 * 3600]);
@@ -105,11 +108,16 @@ describe("PhantaSpace", function () {
 
       await deployed_contract.genesisAuctionEnd(geocode);
 
-      await deployed_contract.connect(addr2).withdraw(geocode);
+      const balance1 = await waffle.provider.getBalance(addr1.address);
+      console.log("balance :", balance1);
 
-      console.log(addr1.address);
-      const balance = await deployed_contract.balanceOf(addr1.address);
-      console.log("balance :", balance);
+      const pendinReturn = await deployed_contract.pendingReturns(geocode, addr1.address);
+      console.log("pendinReturn :", pendinReturn);
+
+      const withdrawResult = await deployed_contract.connect(addr1).withdraw(geocode);
+
+      const balance2 = await waffle.provider.getBalance(addr1.address);
+      console.log("balance :", balance2);
 
       const contractBalance = await waffle.provider.getBalance(deployed_contract.address);
 

@@ -37,7 +37,7 @@ async function main() {
 
   // const mint_result = await deployed_contract.safeMint(owner.address, testMint);
 
-  console.log("https://testnets.opensea.io/assets/" + deployed_contract.address + "/" + testMint);
+  // console.log("https://testnets.opensea.io/assets/" + deployed_contract.address + "/" + testMint);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
