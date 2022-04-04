@@ -19,7 +19,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 
 
-contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
+contract PhantaSpaceV2 is Initializable, ERC721Upgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     string public baseURI;
     string public contractURI;
