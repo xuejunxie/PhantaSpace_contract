@@ -40,7 +40,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     event AuctionEnded(uint256 geocode, address highestBidder, uint256 highestBid);
     event HighestBidIncreased(uint256 geocode, address highestBidder, uint256 highestBid);
     event SubSpaceAuctionAllowed(uint256 geocode);
-
+    event withDrawalRequested(uint256 geocode, address bidder, uint256 amount);
 
     function initialize( string memory _metadataURL, string memory _contractURI, uint _vendingPrice, uint _auctionDuration, uint96 _royaltyFeesInBips) initializer public {
         __ERC721_init("PhantaSpace", unicode"🌐");
@@ -301,6 +301,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
             pendingReturns[geocode][msg.sender] = amount;
             return false;
         }
+        emit withDrawalRequested( geocode, msg.sender, amount);
         return true;
     }
 

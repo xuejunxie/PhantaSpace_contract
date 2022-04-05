@@ -38,34 +38,34 @@
     },
     {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xbbcd17820d9c86ca455c742cd21690fa33f5bf307864102da1013f7545af8aaf",
+      "txHash": "0xa006ef36e965c261dec53aad787577933bcf78cafc468a81eff5e77ea19e71cd",
       "kind": "uups"
     },
     {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xd6e667a60345fd5225267ded9f687315e1f5670a843076235a3318ff85a0381e",
+      "txHash": "0xdbb81f51b595b59a241a308acce5e6695e136bcc71a750f63068ed42c09c5adf",
       "kind": "uups"
     },
     {
       "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0x7269577874e7593df722e07bf5683be511f45ecefb148a8b2becc976a415bc26",
+      "txHash": "0xd8bb0de3f642229aeb0e36b8eb1ac1076525ac288a09fb61639851fc791cf2ed",
       "kind": "uups"
     },
     {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x538eb1a5897ec63f29a630a203fa9eb955596aba7927e89acee59aaa6cb4e143",
+      "txHash": "0x09240188c1170953f0d8cacabdcb98199635842b1c78a138423201d7fc81b884",
       "kind": "uups"
     },
     {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-      "txHash": "0xa936bb619dc9488ab6156d503626cd508e208ff8b951dc541e90e87a311c1180",
+      "txHash": "0x791d3e3bccbed21dce55f1c5c99c3d05d5c5760ebfb376625829e6f10dcd8334",
       "kind": "uups"
     }
   ],
   "impls": {
-    "8a238ad2222df1b02c339bb1b5b40ad39b6e5c8c4f4f2e123f4a1abadd6ca3a5": {
+    "2d5b598872eda5dc76c4cd5f02a17ef0adca7bed478d7919f6589ed64ed31f75": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x222e3eb31f4a83fb4239f38a6894dc80baa9d570d2a2dc382c1e199912dbc490",
+      "txHash": "0x5953805e09c47cfd2cd581511cc4a9cebb9b9ae0488a891a3f67799e85a83158",
       "layout": {
         "storage": [
           {
@@ -242,7 +242,7 @@
             "slot": "451",
             "type": "t_string_storage",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:25"
+            "src": "contracts/PhantaSpace.sol:24"
           },
           {
             "label": "contractURI",
@@ -250,7 +250,7 @@
             "slot": "452",
             "type": "t_string_storage",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:26"
+            "src": "contracts/PhantaSpace.sol:25"
           },
           {
             "label": "vendingPrice",
@@ -258,7 +258,7 @@
             "slot": "453",
             "type": "t_uint256",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:28"
+            "src": "contracts/PhantaSpace.sol:27"
           },
           {
             "label": "auctionDuration",
@@ -266,7 +266,7 @@
             "slot": "454",
             "type": "t_uint256",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:29"
+            "src": "contracts/PhantaSpace.sol:28"
           },
           {
             "label": "royaltyFeesInBips",
@@ -274,7 +274,7 @@
             "slot": "455",
             "type": "t_uint256",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:30"
+            "src": "contracts/PhantaSpace.sol:29"
           },
           {
             "label": "auctionEndTime",
@@ -282,7 +282,7 @@
             "slot": "456",
             "type": "t_mapping(t_uint256,t_uint256)",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:32"
+            "src": "contracts/PhantaSpace.sol:31"
           },
           {
             "label": "pendingReturns",
@@ -290,7 +290,7 @@
             "slot": "457",
             "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:33"
+            "src": "contracts/PhantaSpace.sol:32"
           },
           {
             "label": "highestBid",
@@ -298,7 +298,7 @@
             "slot": "458",
             "type": "t_mapping(t_uint256,t_uint256)",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:34"
+            "src": "contracts/PhantaSpace.sol:33"
           },
           {
             "label": "highestBidder",
@@ -306,7 +306,7 @@
             "slot": "459",
             "type": "t_mapping(t_uint256,t_address)",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:35"
+            "src": "contracts/PhantaSpace.sol:34"
           },
           {
             "label": "subspaceAvailableForAuction",
@@ -314,7 +314,7 @@
             "slot": "460",
             "type": "t_mapping(t_uint256,t_bool)",
             "contract": "PhantaSpace",
-            "src": "contracts/PhantaSpace.sol:36"
+            "src": "contracts/PhantaSpace.sol:35"
           }
         ],
         "types": {
