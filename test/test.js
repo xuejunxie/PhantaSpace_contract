@@ -145,4 +145,23 @@ describe("PhantaSpace", function () {
       console.log("tokenURI :", tokenURI);
     });
   });
+
+  describe("test parent function", function () {
+    const childGeocode = 12313071105912;
+    const parentGeocode = 13130710591;
+    it("should return the right parent geocode", async function () {
+      const parent = await deployed_contract.parent(childGeocode);
+      console.log(parent);
+      expect(parent).to.equal(parentGeocode);
+    });
+  });
+
+  describe("pause", function () {
+    const geocode = 3130710591;
+
+    it("should mint a space token", async function () {
+      await deployed_contract.pause();
+      await deployed_contract.unpause();
+    });
+  });
 });

@@ -52,6 +52,10 @@ module.exports = {
       url: process.env.Rinkeby_URL,
       accounts: { mnemonic: process.env.Rinkeby_account_mnemonic },
     },
+    mainnet: {
+      url: process.env.Mainnet_URL,
+      accounts: [process.env.Mainnet_private_key],
+    },
   },
   etherscan: {
     apiKey: process.env.Etherscan_api,

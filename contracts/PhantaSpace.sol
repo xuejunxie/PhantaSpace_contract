@@ -27,12 +27,14 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
     uint public vendingPrice;
     uint public auctionDuration;
     uint public royaltyFeesInBips;
+    uint public unWithdrawnFunds;
 
     mapping (uint256 => uint) public auctionEndTime;
-    mapping (uint256 => mapping (address => uint)) public pendingReturns;
     mapping (uint256 => uint) public highestBid;
     mapping (uint256 => address) public highestBidder;
     mapping (uint256 => bool) public subspaceAvailableForAuction;
+    mapping (uint256 => mapping (address => uint)) public pendingReturns;
+
 
     event SpaceMinted(address to, uint256 geocode);
     event AuctionStarted(uint256 geocode, uint256 auctionEndTime, uint256 highestBid, address highestBidder);
@@ -55,6 +57,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         royaltyFeesInBips = _royaltyFeesInBips;
         _setDefaultRoyalty(owner(), _royaltyFeesInBips);
         contractURI = _contractURI;
+        unWithdrawnFunds = 0;
 
     }
 
@@ -234,6 +237,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
         auctionEndTime[geocode] = block.timestamp + auctionDuration;
         highestBid[geocode] = msg.value;
+        unWithdrawnFunds += msg.value;
         highestBidder[geocode] = msg.sender;
         emit AuctionStarted(geocode, auctionEndTime[geocode], highestBid[geocode], highestBidder[geocode]);
     }
@@ -247,13 +251,13 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
 
 
-    function parent(uint256 geocode) internal pure returns (uint256 parentGeocode) {
+    function parent(uint256 geocode) public pure returns (uint256 parentGeocode) {
         uint p = geocode % 10;
         require(p>1, "You are naughty. Top spaces don't have parent");
-        uint longitude = geocode / 100;
-        uint latitude = geocode / 10**(p+5);
+        uint longitude = geocode / 10**(p) % (10**(p+2));
+        uint latitude = geocode / 10**(p+5) % (10**(p+2));
         uint levelSign = geocode / 10**(2*p + 7) % 10;
-        uint level = geocode / 10**(2*p+8);
+        uint level = geocode / 10**(2*p+9);
         parentGeocode = level*10**(2*p+6) + levelSign*10**(2*p+5) + latitude * 10**(p+3) + longitude * 10 + p-1;
     }
 
@@ -274,9 +278,9 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
         require(newBid > highestBid[geocode], "Bid should be greater than highestBid");
         
-        pendingReturns[geocode][highestBidder[geocode]] = highestBid[geocode];
         pendingReturns[geocode][msg.sender] = 0;
-
+        pendingReturns[geocode][highestBidder[geocode]] = highestBid[geocode];
+        unWithdrawnFunds += msg.value;
         highestBid[geocode] = newBid;
         highestBidder[geocode] = msg.sender;
 
@@ -296,7 +300,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         uint amount = pendingReturns[geocode][msg.sender];
         require(amount > 0, "You have no pending returns");
         pendingReturns[geocode][msg.sender] = 0;
-
+        unWithdrawnFunds -= amount;
         if(!payable(msg.sender).send(amount)){
             pendingReturns[geocode][msg.sender] = amount;
             return false;
@@ -331,7 +335,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
 
     function ownerWithdraw(uint amount) public onlyOwner returns(bool) {
-        require(amount <= address(this).balance);
+        require(amount <= address(this).balance - unWithdrawnFunds, "Owner of this contract can't withdraw funds unwithdrawn by bidders");
         payable(owner()).transfer(amount);
         return true;
 
