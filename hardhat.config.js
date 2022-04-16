@@ -45,7 +45,7 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      blockGasLimit: 10000000,
+      blockGasLimit: 5000000,
       allowUnlimitedContractSize: false,
     },
     rinkeby: {

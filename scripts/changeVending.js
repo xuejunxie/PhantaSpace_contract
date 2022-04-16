@@ -5,11 +5,9 @@ async function main() {
   const phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
 
   // connect to deployed contract
-  const deployed_contract = phantaSpace_contract.attach("0xA7B6d24152c30999Ee585D94db2af6408Faf275e");
+  const deployed_contract = phantaSpace_contract.attach("0xfb5caCE605AeDcd4119bd63250F27AB644ebE1Fe");
 
-  const owner = await deployed_contract.owner();
-
-  console.log(owner);
+  console.log("contract address:", deployed_contract.address);
 
   await deployed_contract.setVendingPrice(ethers.utils.parseEther("0.01"));
 }

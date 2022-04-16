@@ -30,13 +30,14 @@ describe("PhantaSpace", function () {
 
     metadataURL = "https://phantaspace.com/metadata/";
     contractURI = "https://phantaspace.com/contract/";
-    vendingPrice = ethers.utils.parseEther("0.001");
+    vendingPrice = ethers.utils.parseEther("0.01");
+    auctionFloor = ethers.utils.parseEther("0.25");
     auctionDuration = 24 * 3600;
     royalty = 1000;
 
     deployed_contract = await upgrades.deployProxy(
       phantaSpace_contract,
-      [metadataURL, contractURI, vendingPrice, auctionDuration, royalty],
+      [metadataURL, contractURI, vendingPrice, auctionFloor, auctionDuration, royalty],
       { kind: "uups" }
     );
 
@@ -57,8 +58,18 @@ describe("PhantaSpace", function () {
 
   describe("vending", function () {
     it("should vend space tokens", async function () {
-      await deployed_contract.vending({
-        value: ethers.utils.parseEther("0.001"),
+      const vending = await deployed_contract.vending(3, {
+        value: ethers.utils.parseEther("0.01"),
+      });
+
+      const vendingReceipt = await vending.wait();
+
+      const vendingEvents = await vendingReceipt.events;
+
+      vendingEvents.map((event) => {
+        if (event.event == "SpaceMinted") {
+          console.log("geocode", event.args.geocode);
+        }
       });
 
       // const NFT_numbers = await deployed_contract.balanceOf(owner.address);
@@ -73,7 +84,7 @@ describe("PhantaSpace", function () {
     let geocode = 3130710591;
     it("should start a genesis auction", async function () {
       await deployed_contract.genesisAuction(geocode, {
-        value: ethers.utils.parseEther("0.1"),
+        value: ethers.utils.parseEther("0.25"),
       });
 
       const auctionEndTime1 = await deployed_contract.auctionEndTime(geocode);
@@ -85,13 +96,13 @@ describe("PhantaSpace", function () {
       console.log("balance :", balance0);
 
       await deployed_contract.connect(addr1).bid(geocode, {
-        value: ethers.utils.parseEther("0.2"),
+        value: ethers.utils.parseEther("0.3"),
       });
 
       await network.provider.send("evm_increaseTime", [10 * 3600 - 60]);
 
       await deployed_contract.connect(addr2).bid(geocode, {
-        value: ethers.utils.parseEther("0.3"),
+        value: ethers.utils.parseEther("0.4"),
       });
 
       await network.provider.send("evm_increaseTime", [25 * 3600]);
@@ -107,6 +118,8 @@ describe("PhantaSpace", function () {
       expect(parseInt(auctionEndTime2)).to.equal(parseInt(auctionEndTime1) + 10 * 60);
 
       await deployed_contract.genesisAuctionEnd(geocode);
+      await deployed_contract.withdraw(geocode);
+      // await deployed_contract.connect(addr1).withdraw(geocode);
 
       const balance1 = await waffle.provider.getBalance(addr1.address);
       console.log("balance :", balance1);
@@ -128,6 +141,18 @@ describe("PhantaSpace", function () {
 
       //put subspace to auction
       await deployed_contract.connect(addr2).putSubspaceToAuciton(geocode);
+      await deployed_contract.connect(addr2).mintSubspace(geocode, 1, 1, 1);
+      const childGeocode = 313070105902;
+      const contractBalance2 = await waffle.provider.getBalance(deployed_contract.address);
+      console.log("contractBalance :", contractBalance2);
+      await deployed_contract.genesisAuction(childGeocode, {
+        value: ethers.utils.parseEther("0.25"),
+      });
+      await network.provider.send("evm_increaseTime", [49 * 3600]);
+      await deployed_contract.genesisAuctionEnd(childGeocode);
+      const contractBalance3 = await waffle.provider.getBalance(deployed_contract.address);
+      console.log("contractBalance :", contractBalance3);
+      await deployed_contract.ownerWithdraw(contractBalance3);
     });
   });
 
@@ -147,12 +172,24 @@ describe("PhantaSpace", function () {
   });
 
   describe("test parent function", function () {
-    const childGeocode = 12313071105912;
-    const parentGeocode = 13130710591;
+    const childGeocode = 313070105902;
+    const parentGeocode = 3130710591;
     it("should return the right parent geocode", async function () {
       const parent = await deployed_contract.parent(childGeocode);
       console.log(parent);
       expect(parent).to.equal(parentGeocode);
+    });
+  });
+
+  describe("checnGeocode", function () {
+    const geocode = 3130710591;
+    it("should check the geocode", async function () {
+      const result = await deployed_contract.safeMint(owner.address, geocode);
+
+      const events = await result.wait();
+
+      const args = await events.events[0].args;
+      console.log(args);
     });
   });
 

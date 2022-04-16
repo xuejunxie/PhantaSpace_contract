@@ -21,13 +21,14 @@ async function main() {
 
   const metadataURL = "http://phantaspace.com/metadata/";
   const contractURI = "http://phantaspace.com/contract/";
-  const vendingPrice = ethers.utils.parseEther("0.00001");
-  const auctionDuration = 30 * 60;
+  const vendingPrice = ethers.utils.parseEther("0.01");
+  const auctionFloor = ethers.utils.parseEther("0.25");
+  const auctionDuration = 48 * 3600;
   const royalty = 1000;
 
   const deployed_contract = await upgrades.deployProxy(
     phantaSpace_contract,
-    [metadataURL, contractURI, vendingPrice, auctionDuration, royalty],
+    [metadataURL, contractURI, vendingPrice, auctionFloor, auctionDuration, royalty],
     { kind: "uups" }
   );
 
