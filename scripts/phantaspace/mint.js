@@ -5,13 +5,13 @@ async function main() {
   const phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
 
   // connect to deployed contract
-  const deployed_contract = phantaSpace_contract.attach("0x68fA24fd81e2f4e72437d56B15C46601459Cae0e");
+  const deployed_contract = phantaSpace_contract.attach("0xfb5caCE605AeDcd4119bd63250F27AB644ebE1Fe");
 
   const owner = await deployed_contract.owner();
 
   console.log(owner);
 
-  const mint_result = await deployed_contract.safeMint(owner, 3130710601);
+  const mint_result = await deployed_contract.safeMint(owner, 3130810531);
 
   console.log(mint_result);
 }

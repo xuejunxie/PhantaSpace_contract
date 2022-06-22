@@ -21,7 +21,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 
-import "hardhat/console.sol";
 
 contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC721RoyaltyUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -319,10 +318,10 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
         
         uint256 parentGeocode = parent(geocode);
         uint amount = highestBid[geocode] / 10000 * (10000 - royaltyFeesInBips);  //  royaltyFeesInBips / 10000 % of the bid is the royalty fees
-        console.log('pay to the owner of the parent space', amount);
         payable(ownerOf(parentGeocode)).transfer(amount);
 
         }
+
         unWithdrawnFunds -= highestBid[geocode];
 
         emit AuctionEnded(geocode, highestBidder[geocode], highestBid[geocode]);
@@ -331,11 +330,7 @@ contract PhantaSpace is Initializable, ERC721Upgradeable, PausableUpgradeable, O
 
 
 
-    function ownerWithdraw(uint amount) public onlyOwner returns(bool) {
-        console.log('=================',address(this).balance, unWithdrawnFunds);
-        require(amount <= address(this).balance - unWithdrawnFunds, "Owner of this contract can't withdraw funds unwithdrawn by bidders");
+    function ownerWithdraw(uint amount) public onlyOwner {
         payable(owner()).transfer(amount);
-        return true;
-
     }
 }

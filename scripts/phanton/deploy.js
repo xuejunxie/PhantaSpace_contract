@@ -4,7 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const { upgrades } = require("hardhat");
-const hre = require("hardhat");
+// const hre = require("hardhat");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -15,22 +15,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const phantaSpace_contract = await ethers.getContractFactory("PhantaSpace");
+  const phanton_contract = await ethers.getContractFactory("Phanton");
   [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
   console.log("owner :", owner.address);
+  // console.log(addr1);
 
-  const metadataURL = "http://phantaspace.com/metadata/";
-  const contractURI = "http://phantaspace.com/contract/";
-  const vendingPrice = ethers.utils.parseEther("0.01");
-  const auctionFloor = ethers.utils.parseEther("0.25");
-  const auctionDuration = 48 * 3600;
-  const royalty = 1000;
-
-  const deployed_contract = await upgrades.deployProxy(
-    phantaSpace_contract,
-    [metadataURL, contractURI, vendingPrice, auctionFloor, auctionDuration, royalty],
-    { kind: "uups" }
-  );
+  const deployed_contract = await upgrades.deployProxy(phanton_contract, [], { kind: "uups" });
 
   console.log("deployed_contract :", deployed_contract.address);
 

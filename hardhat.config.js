@@ -56,13 +56,24 @@ module.exports = {
       url: process.env.Mainnet_URL,
       accounts: [process.env.Mainnet_private_key],
     },
+    polygon: {
+      url: process.env.Polygon_URL,
+      accounts: [process.env.Polygon_private_key],
+    },
+    polygon_mumbai: {
+      url: process.env.Polygon_Mumbai_URL,
+      accounts: [process.env.Polygon_Mumbai_private_key],
+    },
   },
   etherscan: {
     apiKey: process.env.Etherscan_api,
+    // apiKey: process.env.Polygon_api,
   },
   gasReporter: {
     enabled: true,
     gasPriceApi: process.env.Gas_price_api,
+    // gasPriceApi: process.env.Matic_price_api,
+    // token: "Matic",
     currency: "USD",
     coinmarketcap: process.env.Coin_market_cap_api,
   },
