@@ -47,6 +47,11 @@
       "kind": "uups"
     },
     {
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "txHash": "0xfaea405a25e44805e9111b91c62d1d3c5334cf61d02beb496bdc9764a7c70523",
+      "kind": "uups"
+    },
+    {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       "txHash": "0xaaab2ad274d20af5dd9ebad65dc312b9b7abf6d97564e8761b8a8ea9ab124643",
       "kind": "uups"
@@ -88,7 +93,17 @@
     },
     {
       "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0xfbbc1afd8cf4ba63523f9c4e8db579ae9f42af45da987e335763487192c11025",
+      "txHash": "0x1d04db6dff97e187d34d209b118308307383512144655435ef094079c9a4dfc5",
+      "kind": "uups"
+    },
+    {
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "txHash": "0xd8f4cd3d678146ef09dd073fda09d7a24ce55922154784fbb87766d807bc0f70",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
+      "txHash": "0x44a4cf859ba55ee39f33b16c5b6aecc06d3dfa72131cc67376b58469faa2c751",
       "kind": "uups"
     }
   ],
@@ -453,9 +468,9 @@
         }
       }
     },
-    "b7db909231c07b7e193689524c9781a5c7891245dc8aa4e8694fd5467927f6e6": {
+    "1d6aa5d86bbdf4774ffcdc56d8fd047c03fff2fe50cc72c947b554d68a63e8d8": {
       "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
-      "txHash": "0xedb3b90dd6b9d9a660c4780d88327b625340b7139df60d6f4fb57268eb3700e3",
+      "txHash": "0xf2226d26339212260a56088da459ceeb4293eeb1d95e98867fe3094370ba7e55",
       "layout": {
         "storage": [
           {
@@ -699,12 +714,28 @@
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
           },
           {
-            "label": "seedSaleSold",
+            "label": "maximumSupply",
             "offset": 0,
             "slot": "554",
             "type": "t_uint256",
             "contract": "Phanton",
-            "src": "contracts/Phanton.sol:16"
+            "src": "contracts/Phanton.sol:29"
+          },
+          {
+            "label": "seedTokenSold",
+            "offset": 0,
+            "slot": "555",
+            "type": "t_uint256",
+            "contract": "Phanton",
+            "src": "contracts/Phanton.sol:30"
+          },
+          {
+            "label": "seedFundRaised",
+            "offset": 0,
+            "slot": "556",
+            "type": "t_uint256",
+            "contract": "Phanton",
+            "src": "contracts/Phanton.sol:31"
           }
         ],
         "types": {

@@ -1,5 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.10;
+
+
+// 8888888b.  888                        888                     
+// 888   Y88b 888                        888                     
+// 888    888 888                        888                     
+// 888   d88P 88888b.   8888b.  88888b.  888888 .d88b.  88888b.  
+// 8888888P"  888 "88b     "88b 888 "88b 888   d88""88b 888 "88b 
+// 888        888  888 .d888888 888  888 888   888  888 888  888 
+// 888        888  888 888  888 888  888 Y88b. Y88..88P 888  888 
+// 888        888  888 "Y888888 888  888  "Y888 "Y88P"  888  888 
+
+
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20BurnableUpgradeable.sol";
@@ -10,12 +22,18 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20Pe
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "hardhat/console.sol";
 
 contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, ERC20SnapshotUpgradeable, OwnableUpgradeable, PausableUpgradeable, ERC20PermitUpgradeable, ERC20VotesUpgradeable, UUPSUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
-    uint public seedSaleSold;
+    uint public maximumSupply;
+    uint public seedTokenSold;
+    uint public seedFundRaised;
 
-    function initialize() initializer public {
+    event tokenMinted(address to, uint256 amount, uint256 total);
+    event seedFund(address to, uint256 fund, uint256 token);
+
+    function initialize(uint _maximumSupply) initializer public {
         __ERC20_init("PhantaSpace Utility Token", "Phanton");
         __ERC20Burnable_init();
         __ERC20Snapshot_init();
@@ -24,8 +42,12 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         __ERC20Permit_init("PhantaSpace Utility Token");
         __ERC20Votes_init();
         __UUPSUpgradeable_init();
-        seedSaleSold = 0;
-        _mint(msg.sender, 1000000000 * 10 ** decimals());
+
+        seedTokenSold = 0;
+        seedFundRaised = 0;
+        maximumSupply = _maximumSupply * 10 ** decimals();
+        
+        console.log("owner: ",msg.sender);
     }
 
     function snapshot() public onlyOwner {
@@ -71,7 +93,10 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         internal
         override(ERC20Upgradeable, ERC20VotesUpgradeable)
     {
+        require(totalSupply() + amount <= maximumSupply, "can't mint more than maximumSupply");
+        emit tokenMinted(to, amount, totalSupply());
         super._mint(to, amount);
+        console.log(totalSupply());
     }
 
     function _burn(address account, uint256 amount)
@@ -81,8 +106,18 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         super._burn(account, amount);
     }
 
-    function seedSale(address to, uint256 amount) public payable {
-        
+    function seedSale() public payable {
+        uint A = maximumSupply/10;
+        uint B = 800 * 10 ** decimals();
+        uint T1 = A * B/(seedFundRaised+B);
+        uint T2 = A * B/((seedFundRaised+msg.value)+B);
+        uint payoutToken = T1 - T2;
+        console.log(payoutToken / 10**decimals());
+        _mint(msg.sender, payoutToken);     
+        emit tokenMinted(msg.sender, payoutToken, totalSupply());
+        emit seedFund(msg.sender, msg.value, payoutToken); 
+        seedFundRaised += msg.value;
+        seedTokenSold += payoutToken;
     }
 
 }
