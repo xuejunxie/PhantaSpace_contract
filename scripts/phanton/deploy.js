@@ -19,8 +19,8 @@ async function main() {
   [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
   console.log("owner :", owner.address);
   // console.log(addr1);
-
-  const deployed_contract = await upgrades.deployProxy(phanton_contract, [], { kind: "uups" });
+  const maximumSupply = 10000000000;
+  const deployed_contract = await upgrades.deployProxy(phanton_contract, [maximumSupply], { kind: "uups" });
 
   console.log("deployed_contract :", deployed_contract.address);
 

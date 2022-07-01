@@ -22,16 +22,19 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20Pe
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, ERC20SnapshotUpgradeable, OwnableUpgradeable, PausableUpgradeable, ERC20PermitUpgradeable, ERC20VotesUpgradeable, UUPSUpgradeable {
+contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, ERC20SnapshotUpgradeable, OwnableUpgradeable, PausableUpgradeable, ERC20PermitUpgradeable, ERC20VotesUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     uint public maximumSupply;
     uint public seedTokenSold;
     uint public seedFundRaised;
 
-    event tokenMinted(address to, uint256 amount, uint256 total);
-    event seedFund(address to, uint256 fund, uint256 token);
+    event tokenMinted(address to, uint256 amount);
+    event seedFund(address from, uint256 fund, uint256 token);
+    event totalSupplyIncreased(uint256 newTotalSupply);
+    event seedFundIncreased(uint256 newSeedFund);
+    event seedTokenSoldIncreased(uint256 newSeedTokenSold);
 
     function initialize(uint _maximumSupply) initializer public {
         __ERC20_init("PhantaSpace Utility Token", "Phanton");
@@ -42,12 +45,12 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         __ERC20Permit_init("PhantaSpace Utility Token");
         __ERC20Votes_init();
         __UUPSUpgradeable_init();
+        __ReentrancyGuard_init();
 
         seedTokenSold = 0;
         seedFundRaised = 0;
         maximumSupply = _maximumSupply * 10 ** decimals();
         
-        console.log("owner: ",msg.sender);
     }
 
     function snapshot() public onlyOwner {
@@ -94,9 +97,9 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         override(ERC20Upgradeable, ERC20VotesUpgradeable)
     {
         require(totalSupply() + amount <= maximumSupply, "can't mint more than maximumSupply");
-        emit tokenMinted(to, amount, totalSupply());
+        emit tokenMinted(to, amount);
         super._mint(to, amount);
-        console.log(totalSupply());
+        emit totalSupplyIncreased(totalSupply());
     }
 
     function _burn(address account, uint256 amount)
@@ -112,12 +115,16 @@ contract Phanton is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, E
         uint T1 = A * B/(seedFundRaised+B);
         uint T2 = A * B/((seedFundRaised+msg.value)+B);
         uint payoutToken = T1 - T2;
-        console.log(payoutToken / 10**decimals());
         _mint(msg.sender, payoutToken);     
-        emit tokenMinted(msg.sender, payoutToken, totalSupply());
+        emit tokenMinted(msg.sender, payoutToken);
         emit seedFund(msg.sender, msg.value, payoutToken); 
         seedFundRaised += msg.value;
         seedTokenSold += payoutToken;
+        emit seedFundIncreased(seedFundRaised);
+        emit seedTokenSoldIncreased(seedTokenSold);
     }
 
+    function ownerWithdraw(uint amount) public onlyOwner {
+        payable(owner()).transfer(amount);
+    }
 }

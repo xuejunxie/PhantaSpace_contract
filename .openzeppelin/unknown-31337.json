@@ -38,17 +38,27 @@
     },
     {
       "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0xaeae14f891e79eec6ca266593ec642eb1e347a1785fe251e819914a998fb3e5a",
+      "txHash": "0x9887e98593cfa913e50000c1df874782d653a783b1ec3537d9c5bb8ea7562090",
       "kind": "uups"
     },
     {
       "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0x8a4c92bb1b75957e64f162c2f160cbcf118a8dd90bed8ef446de65dca867e794",
+      "txHash": "0xa58b1ace720d3287157bd8fb4b3d6534861618ea45847bac694ec2dbb6d12616",
+      "kind": "uups"
+    },
+    {
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "txHash": "0x753be41c6f170362c134ae8eee65245ef9e5d386ea648efcd83b878063879758",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "txHash": "0x5b6ea8e0280ad8e43e7f59e4688a484fd593df7a1410d84f820d58956908a31c",
       "kind": "uups"
     },
     {
       "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-      "txHash": "0xfaea405a25e44805e9111b91c62d1d3c5334cf61d02beb496bdc9764a7c70523",
+      "txHash": "0x5e31cf368b1b0e0daa18d3a8bd2fb87b3ebe78b6041551400813f0860ed8827c",
       "kind": "uups"
     },
     {
@@ -93,17 +103,17 @@
     },
     {
       "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x1d04db6dff97e187d34d209b118308307383512144655435ef094079c9a4dfc5",
+      "txHash": "0xfed5453d86ecbc0f43463607add4e39f2a5cfda239ba4a7f6cf0cb3afb834f2e",
       "kind": "uups"
     },
     {
       "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
-      "txHash": "0xd8f4cd3d678146ef09dd073fda09d7a24ce55922154784fbb87766d807bc0f70",
+      "txHash": "0xb2a796b824d9d8b4abf52edf5bdca550c618b2f9ad50420d4122cf60b350c997",
       "kind": "uups"
     },
     {
       "address": "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-      "txHash": "0x44a4cf859ba55ee39f33b16c5b6aecc06d3dfa72131cc67376b58469faa2c751",
+      "txHash": "0x3930c11c855251571d8a75dd0cbcd88c4514e6381a7afcfe9990ed4f1d6222a8",
       "kind": "uups"
     }
   ],
@@ -149,7 +159,7 @@
             "label": "_defaultRoyaltyInfo",
             "offset": 0,
             "slot": "101",
-            "type": "t_struct(RoyaltyInfo)4093_storage",
+            "type": "t_struct(RoyaltyInfo)4152_storage",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:36"
           },
@@ -157,7 +167,7 @@
             "label": "_tokenRoyaltyInfo",
             "offset": 0,
             "slot": "102",
-            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)4093_storage)",
+            "type": "t_mapping(t_uint256,t_struct(RoyaltyInfo)4152_storage)",
             "contract": "ERC2981Upgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol:37"
           },
@@ -427,7 +437,7 @@
             "label": "mapping(uint256 => mapping(address => uint256))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(RoyaltyInfo)4093_storage)": {
+          "t_mapping(t_uint256,t_struct(RoyaltyInfo)4152_storage)": {
             "label": "mapping(uint256 => struct ERC2981Upgradeable.RoyaltyInfo)",
             "numberOfBytes": "32"
           },
@@ -439,7 +449,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(RoyaltyInfo)4093_storage": {
+          "t_struct(RoyaltyInfo)4152_storage": {
             "label": "struct ERC2981Upgradeable.RoyaltyInfo",
             "members": [
               {
@@ -468,9 +478,9 @@
         }
       }
     },
-    "1d6aa5d86bbdf4774ffcdc56d8fd047c03fff2fe50cc72c947b554d68a63e8d8": {
+    "3d44d1c14ba73ec27f5c9571e48709fce9f90947f5b5017cc74adcadc18a7325": {
       "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
-      "txHash": "0xf2226d26339212260a56088da459ceeb4293eeb1d95e98867fe3094370ba7e55",
+      "txHash": "0x4bb4bd624a527730385d9f2ddb7cdf00f1de8d850e8070eda659aa5f69c36487",
       "layout": {
         "storage": [
           {
@@ -557,7 +567,7 @@
             "label": "_accountBalanceSnapshots",
             "offset": 0,
             "slot": "151",
-            "type": "t_mapping(t_address,t_struct(Snapshots)1723_storage)",
+            "type": "t_mapping(t_address,t_struct(Snapshots)1782_storage)",
             "contract": "ERC20SnapshotUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20SnapshotUpgradeable.sol:62"
           },
@@ -565,7 +575,7 @@
             "label": "_totalSupplySnapshots",
             "offset": 0,
             "slot": "152",
-            "type": "t_struct(Snapshots)1723_storage",
+            "type": "t_struct(Snapshots)1782_storage",
             "contract": "ERC20SnapshotUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20SnapshotUpgradeable.sol:63"
           },
@@ -573,7 +583,7 @@
             "label": "_currentSnapshotId",
             "offset": 0,
             "slot": "154",
-            "type": "t_struct(Counter)4658_storage",
+            "type": "t_struct(Counter)4717_storage",
             "contract": "ERC20SnapshotUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20SnapshotUpgradeable.sol:66"
           },
@@ -645,7 +655,7 @@
             "label": "_nonces",
             "offset": 0,
             "slot": "353",
-            "type": "t_mapping(t_address,t_struct(Counter)4658_storage)",
+            "type": "t_mapping(t_address,t_struct(Counter)4717_storage)",
             "contract": "ERC20PermitUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol:26"
           },
@@ -677,7 +687,7 @@
             "label": "_checkpoints",
             "offset": 0,
             "slot": "405",
-            "type": "t_mapping(t_address,t_array(t_struct(Checkpoint)2065_storage)dyn_storage)",
+            "type": "t_mapping(t_address,t_array(t_struct(Checkpoint)2124_storage)dyn_storage)",
             "contract": "ERC20VotesUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol:43"
           },
@@ -685,7 +695,7 @@
             "label": "_totalSupplyCheckpoints",
             "offset": 0,
             "slot": "406",
-            "type": "t_array(t_struct(Checkpoint)2065_storage)dyn_storage",
+            "type": "t_array(t_struct(Checkpoint)2124_storage)dyn_storage",
             "contract": "ERC20VotesUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20VotesUpgradeable.sol:44"
           },
@@ -714,9 +724,25 @@
             "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
           },
           {
-            "label": "maximumSupply",
+            "label": "_status",
             "offset": 0,
             "slot": "554",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "555",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:74"
+          },
+          {
+            "label": "maximumSupply",
+            "offset": 0,
+            "slot": "604",
             "type": "t_uint256",
             "contract": "Phanton",
             "src": "contracts/Phanton.sol:29"
@@ -724,7 +750,7 @@
           {
             "label": "seedTokenSold",
             "offset": 0,
-            "slot": "555",
+            "slot": "605",
             "type": "t_uint256",
             "contract": "Phanton",
             "src": "contracts/Phanton.sol:30"
@@ -732,7 +758,7 @@
           {
             "label": "seedFundRaised",
             "offset": 0,
-            "slot": "556",
+            "slot": "606",
             "type": "t_uint256",
             "contract": "Phanton",
             "src": "contracts/Phanton.sol:31"
@@ -743,7 +769,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(Checkpoint)2065_storage)dyn_storage": {
+          "t_array(t_struct(Checkpoint)2124_storage)dyn_storage": {
             "label": "struct ERC20VotesUpgradeable.Checkpoint[]",
             "numberOfBytes": "32"
           },
@@ -783,7 +809,7 @@
             "label": "mapping(address => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_array(t_struct(Checkpoint)2065_storage)dyn_storage)": {
+          "t_mapping(t_address,t_array(t_struct(Checkpoint)2124_storage)dyn_storage)": {
             "label": "mapping(address => struct ERC20VotesUpgradeable.Checkpoint[])",
             "numberOfBytes": "32"
           },
@@ -791,11 +817,11 @@
             "label": "mapping(address => mapping(address => uint256))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Counter)4658_storage)": {
+          "t_mapping(t_address,t_struct(Counter)4717_storage)": {
             "label": "mapping(address => struct CountersUpgradeable.Counter)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(Snapshots)1723_storage)": {
+          "t_mapping(t_address,t_struct(Snapshots)1782_storage)": {
             "label": "mapping(address => struct ERC20SnapshotUpgradeable.Snapshots)",
             "numberOfBytes": "32"
           },
@@ -807,7 +833,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Checkpoint)2065_storage": {
+          "t_struct(Checkpoint)2124_storage": {
             "label": "struct ERC20VotesUpgradeable.Checkpoint",
             "members": [
               {
@@ -825,7 +851,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(Counter)4658_storage": {
+          "t_struct(Counter)4717_storage": {
             "label": "struct CountersUpgradeable.Counter",
             "members": [
               {
@@ -837,7 +863,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(Snapshots)1723_storage": {
+          "t_struct(Snapshots)1782_storage": {
             "label": "struct ERC20SnapshotUpgradeable.Snapshots",
             "members": [
               {
