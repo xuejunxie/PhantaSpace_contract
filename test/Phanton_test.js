@@ -61,4 +61,12 @@ describe("Phanton", function () {
       // const buyEvents = await buyReceipt.events;
     });
   });
+
+  describe("Upgrade", function () {
+    it("should upgrade", async function () {
+      const PhantonV2 = await ethers.getContractFactory("PhantonV2");
+      const upgraded = await upgrades.upgradeProxy(deployed_contract.address, PhantonV2);
+      console.log("upgrade address : ", upgraded.address);
+    });
+  });
 });
