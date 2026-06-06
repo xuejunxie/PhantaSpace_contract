@@ -9,4 +9,8 @@ cache
 artifacts
 
 secret.json
-.*
+.env
+.env.*
+!.env.example
+.DS_Store
+.openzeppelin
